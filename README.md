@@ -5,3 +5,6 @@ FinderやPath Finderで選択しているファイル・フォルダを、選択
 [![Image from Gyazo](https://i.gyazo.com/4b5f8aadb79453598e322787f93d1a87.png)](https://gyazo.com/4b5f8aadb79453598e322787f93d1a87)
 
 項目を追加・編集したい場合は「List Filter」でできますが、「Arg」の値を正しいアプリケーション名にする必要があります。
+
+このWorkflowは、下記の選択ファイルをSublime Textを開くWorkflowをベースに作成しました。
+[alfred\-workflows/open\-with\-sublime\-text at master · franzheidl/alfred\-workflows](https://github.com/franzheidl/alfred-workflows/tree/master/open-with-sublime-text)
