@@ -1,4 +1,4 @@
-## Open with Application ［[Download](https://github.com/31mskz10/Alfred_Workflows/releases/download/Open_with_Application/Open.with.Application.alfredworkflow) ］
+## Open with Application ［[Download](https://github.com/31mskz10/Alfred_Workflows/releases/download/owa_v1.2.0/Open.with.Application.alfredworkflow) ］
 FinderやPath Finderで選択しているファイル・フォルダを、選択したアプリケーションで開くWorkflowです。
 キーワードの「o」の後に半角スペースを空けてアプリケーション名を入力して使います。
 
