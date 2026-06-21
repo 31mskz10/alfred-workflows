@@ -5,6 +5,7 @@
 | --- | --- |
 | [Open with Application](https://github.com/31mskz10/alfred-workflows/releases/download/owa_v2.0.0/Open.with.Application.alfredworkflow) | FinderやPath Finderで選択中のファイル・フォルダを、指定したアプリケーションで開く。 |
 | [OpenIn Temporary Switch](https://github.com/31mskz10/alfred-workflows/releases/download/OpenIn_Temporary_Switch/OpenIn.Temporary.Switch.alfredworkflow) | OpenInのルールを一時的に切り替える。 |
+| [CleanShot X Actions](https://github.com/31mskz10/alfred-workflows/releases/download/CleanShot_X_Actions/CleanShot.X.Actions.alfredworkflow) | CleanShot XのアクションURLを検索・実行する |
 | [Toggle_Dark_Mode](https://github.com/31mskz10/Alfred_Workflows/releases/download/Toggle_Dark_Mode/Toggle.Dark.Mode.alfredworkflow) | Macのダークモードとライトモードを切り替える。 |
 | [Add New File](https://github.com/31mskz10/Alfred_Workflows/releases/download/Add_New_File/Add.New.File.alfredworkflow) | FinderやPath Finderで選択中のフォルダに新規ファイルを作成する。 |
 | [Change Profile](https://github.com/31mskz10/Alfred_Workflows/releases/download/Change_Profile/Change.Profile.alfredworkflow) | Karabiner-ElementsのProfileを切り替える。 |
@@ -26,6 +27,9 @@ FinderやPath Finderで選択しているファイル・フォルダを、選択
 ### OpenIn Temporary Switch ［[Download](https://github.com/31mskz10/alfred-workflows/releases/download/OpenIn_Temporary_Switch/OpenIn.Temporary.Switch.alfredworkflow) ］
 OpenInのルールを一時的に切り替えるワークフローです。
 
+### CleanShot X Actions ［[Download](https://github.com/31mskz10/alfred-workflows/releases/download/CleanShot_X_Actions/CleanShot.X.Actions.alfredworkflow) ］
+CleanShot XのアクションURLを検索して実行するワークフローです。
+`cs`キーワードのあとに検索ワードを入力して絞り込めます。
 
 ### Toggle_Dark_Mode ［[Download](https://github.com/31mskz10/Alfred_Workflows/releases/download/Toggle_Dark_Mode/Toggle.Dark.Mode.alfredworkflow)］
 Macのダークモードとライトモードを切り替えるWorkflowです。
