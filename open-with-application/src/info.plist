@@ -267,7 +267,7 @@
 query="$1"  # 使わないが残しておく
 
 # 検索対象フォルダ
-folders=( "/Applications" "/Users/${USER}/Applications" )
+folders=( "/Applications" "${HOME}/Applications" )
 
 # キャッシュ関連
 cache_dir="${alfred_workflow_cache:-/tmp}"
