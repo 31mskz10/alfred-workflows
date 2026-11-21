@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.31mskz10.ToggleDarkMode</string>
+	<key>category</key>
+	<string>MyWorkflow</string>
+	<key>connections</key>
+	<dict>
+		<key>C08DD244-3C0B-452A-90CF-7959122E048D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>CCE47F26-338B-40A1-ADC7-2B35E95D00BE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>31mskz10</string>
+	<key>description</key>
+	<string>Dark Modeを切り替える</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Toggle Dark Mode</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+  tell application "System Events"
+    tell appearance preferences
+      set dark mode to not dark mode
+    end tell
+  end tell
+end alfred_script</string>
+				<key>cachescript</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>CCE47F26-338B-40A1-ADC7-2B35E95D00BE</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>darkmode</string>
+				<key>subtext</key>
+				<string>ダークモードを切り替える</string>
+				<key>text</key>
+				<string>Toggle Dark Mode</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>C08DD244-3C0B-452A-90CF-7959122E048D</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>ダークモードとライトモードを切り替えるWorkflowです</string>
+	<key>uidata</key>
+	<dict>
+		<key>C08DD244-3C0B-452A-90CF-7959122E048D</key>
+		<dict>
+			<key>xpos</key>
+			<integer>60</integer>
+			<key>ypos</key>
+			<integer>125</integer>
+		</dict>
+		<key>CCE47F26-338B-40A1-ADC7-2B35E95D00BE</key>
+		<dict>
+			<key>xpos</key>
+			<integer>210</integer>
+			<key>ypos</key>
+			<integer>125</integer>
+		</dict>
+	</dict>
+	<key>variablesdontexport</key>
+	<array/>
+	<key>version</key>
+	<string>1.0.0</string>
+	<key>webaddress</key>
+	<string>https://webrandum.net</string>
+</dict>
+</plist>

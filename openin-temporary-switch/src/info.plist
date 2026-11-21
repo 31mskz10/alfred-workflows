@@ -1,0 +1,789 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.31mskz10.openin-temporary-switch</string>
+	<key>connections</key>
+	<dict>
+		<key>189B652E-6137-4422-BD2E-726E7A274143</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6FB80A09-34C6-481C-B8FB-7431F1E760E9</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>2135F3F8-47C5-495B-B16D-9D0B7FD2C882</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>189B652E-6137-4422-BD2E-726E7A274143</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>31mskz10</string>
+	<key>description</key>
+	<string>OpenInのHandler RuleをAlfredから一時的に切り替えるワークフロー。指定した接頭辞付きのルールを一覧表示し、各ルールが起動するアプリのアイコン付きで選択できます。選択後はN分でデフォルトのルールへ自動復帰します（オフにも可能）。</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>OpenIn Temporary Switch</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<true/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>oi</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>#!/bin/bash
+exec /usr/bin/python3 - "{query}" &lt;&lt;'PYEOF'
+# -*- coding: utf-8 -*-
+import json
+import os
+import re
+import sqlite3
+import subprocess
+import sys
+
+query = sys.argv[1] if len(sys.argv) &gt; 1 else ""
+
+def env(name, default):
+    v = os.environ.get(name, "")
+    return v if v else default
+
+# Configuration
+default_minutes = env("DEFAULT_MINUTES", "10")
+default_rule = env("DEFAULT_RULE_NAME", "Default")
+prefix = env("MODE_PREFIX", "[Mode]")
+auto_revert = env("AUTO_REVERT", "true").lower() in ("true", "1", "yes")
+
+home = os.path.expanduser("~")
+default_db = os.path.join(
+    home,
+    "Library/Group Containers/4QE86VV38D.app.loshadki.OpenIn/"
+    "Library/Application Support/OpenIn/local.sqlite",
+)
+db_path = env("OPENIN_DB_PATH", default_db)
+
+fallback_icon = env("FALLBACK_BROWSER_APP_PATH", "/Applications/Safari.app")
+if not os.path.isdir(fallback_icon):
+    fallback_icon = "/System/Applications/Safari.app"
+
+# Resolve OpenIn.app icon
+openin_icon = None
+for cand in (
+    "/Applications/OpenIn.app",
+    "/Applications/Setapp/OpenIn.app",
+    "/Applications/setapp/OpenIn.app",
+):
+    if os.path.isdir(cand):
+        openin_icon = cand
+        break
+if openin_icon is None:
+    openin_icon = fallback_icon
+
+def emit_error(msg):
+    print(json.dumps({
+        "items": [{
+            "title": "エラー",
+            "subtitle": msg,
+            "valid": False,
+            "icon": {"path": "icon.png"},
+        }]
+    }, ensure_ascii=False))
+    sys.exit(0)
+
+# Extract minutes from query (first integer found)
+m = re.search(r"\d+", query or "")
+minutes = m.group(0) if m else default_minutes
+
+if not os.path.isfile(db_path):
+    emit_error(f"OpenInのDBが見つかりません: {db_path}")
+
+# Read all rules + their primary (lowest ZAPPORDER) app + ZDISABLED flag
+try:
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT
+          r.ZNAME,
+          r.ZDISABLED,
+          COALESCE((
+            SELECT a.ZPATH FROM Z_6USEDINRULES j
+            JOIN ZOPENINHANDLERAPP a ON a.Z_PK = j.Z_6SELECTEDAPPS
+            WHERE j.Z_7USEDINRULES = r.Z_PK
+            ORDER BY a.ZAPPORDER ASC LIMIT 1
+          ), ''),
+          COALESCE((
+            SELECT a.ZBUNDLEIDENTIFIER FROM Z_6USEDINRULES j
+            JOIN ZOPENINHANDLERAPP a ON a.Z_PK = j.Z_6SELECTEDAPPS
+            WHERE j.Z_7USEDINRULES = r.Z_PK
+            ORDER BY a.ZAPPORDER ASC LIMIT 1
+          ), '')
+        FROM ZOPENINHANDLERRULE r
+        WHERE r.ZNAME IS NOT NULL
+        ORDER BY r.ZNAME
+    """)
+    rows = cur.fetchall()
+    conn.close()
+except sqlite3.Error as e:
+    emit_error(f"DBの読み取りに失敗しました: {e}")
+
+if not rows:
+    emit_error("OpenInにルールが登録されていません。先にOpenIn側でルールを作成してください。")
+
+# Cache mdfind results across rules
+icon_cache = {}
+
+def resolve_icon(app_path, bundle_id):
+    if app_path and os.path.isdir(app_path):
+        return app_path
+    if bundle_id:
+        if bundle_id in icon_cache:
+            return icon_cache[bundle_id]
+        try:
+            out = subprocess.run(
+                ["mdfind", f'kMDItemCFBundleIdentifier == "{bundle_id}"'],
+                capture_output=True, text=True, timeout=2,
+            )
+            for line in out.stdout.splitlines():
+                line = line.strip()
+                if line and os.path.isdir(line):
+                    icon_cache[bundle_id] = line
+                    return line
+        except (subprocess.TimeoutExpired, OSError):
+            pass
+    return fallback_icon
+
+# First pass: figure out which rule is currently active
+# (only one rule should be enabled at a time, but be defensive)
+active_rule_name = None
+default_rule_active = False
+for rule_name, disabled, _, _ in rows:
+    if disabled == 0:
+        if rule_name == default_rule:
+            default_rule_active = True
+        elif rule_name and rule_name.startswith(prefix):
+            active_rule_name = rule_name
+
+ACTIVE_MARK = "▶"
+
+items = []
+for rule_name, disabled, app_path, bundle_id in rows:
+    if not rule_name:
+        continue
+    if not rule_name.startswith(prefix):
+        continue
+    display = rule_name[len(prefix):]
+    if display.startswith(" "):
+        display = display[1:]
+    if not display:
+        continue
+
+    icon_path = resolve_icon(app_path, bundle_id)
+
+    is_active = (rule_name == active_rule_name)
+
+    if is_active:
+        if auto_revert:
+            subtitle = f"{ACTIVE_MARK} 現在有効（{minutes}分後に自動復帰）"
+        else:
+            subtitle = f"{ACTIVE_MARK} 現在有効"
+    else:
+        if auto_revert:
+            subtitle = f"「{display}」に切り替え（{minutes}分後に自動復帰）"
+        else:
+            subtitle = f"「{display}」に切り替え（自動復帰なし）"
+
+    items.append({
+        "uid": display,
+        "title": display,
+        "subtitle": subtitle,
+        "arg": f"{rule_name}|{minutes}",
+        "icon": {"type": "fileicon", "path": icon_path},
+    })
+
+if not items:
+    emit_error(f"接頭辞「{prefix}」が付いたルールが見つかりません。OpenIn側でルール名の先頭にこの接頭辞を付けてください。")
+
+# Append default item
+if default_rule_active:
+    default_subtitle = f"{ACTIVE_MARK} 現在有効"
+else:
+    default_subtitle = f"今すぐ「{default_rule}」に戻す"
+
+items.append({
+    "uid": "__default__",
+    "title": default_rule,
+    "subtitle": default_subtitle,
+    "arg": "__DEFAULT__|0",
+    "icon": {"type": "fileicon", "path": openin_icon},
+})
+
+print(json.dumps({"items": items}, ensure_ascii=False))
+PYEOF
+</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>数値を入力すると自動復帰までの分数を変更できます（例: 「oi 30」）</string>
+				<key>title</key>
+				<string>OpenIn Temporary Switch</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>2135F3F8-47C5-495B-B16D-9D0B7FD2C882</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>OpenIn 一時切り替え</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>6FB80A09-34C6-481C-B8FB-7431F1E760E9</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>#!/bin/bash
+exec /usr/bin/python3 - "{query}" &lt;&lt;'PYEOF'
+# -*- coding: utf-8 -*-
+import os
+import sqlite3
+import subprocess
+import sys
+import time
+
+if len(sys.argv) &lt; 2 or not sys.argv[1]:
+    print("エラー: 引数がありません")
+    sys.exit(0)
+
+input_arg = sys.argv[1]
+idx = input_arg.rfind("|")
+if idx &lt; 0:
+    print("エラー: 不正な引数: " + input_arg)
+    sys.exit(0)
+rule = input_arg[:idx]
+minutes_str = input_arg[idx+1:]
+try:
+    minutes = int(minutes_str)
+except ValueError:
+    minutes = 0
+
+def env(name, default):
+    v = os.environ.get(name, "")
+    return v if v else default
+
+default_rule = env("DEFAULT_RULE_NAME", "Default")
+auto_revert = env("AUTO_REVERT", "true").lower() in ("true", "1", "yes")
+prefix = env("MODE_PREFIX", "[Mode]")
+
+home = os.path.expanduser("~")
+default_db = os.path.join(
+    home,
+    "Library/Group Containers/4QE86VV38D.app.loshadki.OpenIn/"
+    "Library/Application Support/OpenIn/local.sqlite",
+)
+db_path = env("OPENIN_DB_PATH", default_db)
+
+if not os.path.isfile(db_path):
+    print("エラー: OpenInのDBが見つかりません: " + db_path)
+    sys.exit(0)
+
+openin_app = env("OPENIN_APP_PATH", "")
+if not (openin_app and os.path.isdir(openin_app)):
+    openin_app = ""
+    for cand in (
+        "/Applications/OpenIn.app",
+        "/Applications/Setapp/OpenIn.app",
+        "/Applications/setapp/OpenIn.app",
+    ):
+        if os.path.isdir(cand):
+            openin_app = cand
+            break
+    if not openin_app:
+        print("エラー: OpenIn.app が見つかりません。設定で「OpenIn.app のパス」を指定してください。")
+        sys.exit(0)
+
+app_name = os.path.splitext(os.path.basename(openin_app))[0]
+
+work_dir = "/tmp/openin-alfred"
+os.makedirs(work_dir, exist_ok=True)
+pid_file = os.path.join(work_dir, "revert.pid")
+log_file = os.path.join(work_dir, "revert.log")
+revert_script_path = os.path.join(work_dir, "revert.sh")
+
+def quit_openin():
+    subprocess.run(
+        ["osascript", "-e", 'tell application "' + app_name + '" to quit'],
+        capture_output=True,
+    )
+    time.sleep(1)
+
+def open_openin():
+    subprocess.run(["open", "-a", openin_app], capture_output=True)
+
+def kill_pending_revert():
+    if os.path.isfile(pid_file):
+        try:
+            with open(pid_file) as f:
+                content = f.read().strip()
+            for line in content.split():
+                if line.isdigit():
+                    pid = int(line)
+                    # Try to kill the whole process group
+                    try:
+                        os.killpg(pid, 15)
+                    except (ProcessLookupError, PermissionError, OSError):
+                        try:
+                            os.kill(pid, 15)
+                        except (ProcessLookupError, PermissionError):
+                            pass
+            os.remove(pid_file)
+        except OSError:
+            pass
+
+def db_execute_all(statements):
+    conn = sqlite3.connect(db_path)
+    try:
+        for sql, params in statements:
+            conn.execute(sql, params)
+        conn.commit()
+    finally:
+        conn.close()
+
+def db_count(sql, params=()):
+    conn = sqlite3.connect("file:" + db_path + "?mode=ro", uri=True)
+    try:
+        cur = conn.execute(sql, params)
+        return cur.fetchone()[0]
+    finally:
+        conn.close()
+
+def revert_to_default_now():
+    exists = db_count(
+        "SELECT COUNT(*) FROM ZOPENINHANDLERRULE WHERE ZNAME=?", (default_rule,)
+    )
+    if exists &gt; 0:
+        db_execute_all([
+            ("UPDATE ZOPENINHANDLERRULE SET ZDISABLED=1", ()),
+            ("UPDATE ZOPENINHANDLERRULE SET ZDISABLED=0 WHERE ZNAME=?", (default_rule,)),
+        ])
+    else:
+        db_execute_all([
+            ("UPDATE ZOPENINHANDLERRULE SET ZDISABLED=1", ()),
+        ])
+
+quit_openin()
+kill_pending_revert()
+
+if rule == "__DEFAULT__":
+    revert_to_default_now()
+    open_openin()
+    print("「" + default_rule + "」に戻しました。")
+    sys.exit(0)
+
+exists = db_count("SELECT COUNT(*) FROM ZOPENINHANDLERRULE WHERE ZNAME=?", (rule,))
+if exists == 0:
+    print("エラー: ルール「" + rule + "」がOpenInに見つかりません。")
+    sys.exit(0)
+
+db_execute_all([
+    ("UPDATE ZOPENINHANDLERRULE SET ZDISABLED=1", ()),
+    ("UPDATE ZOPENINHANDLERRULE SET ZDISABLED=0 WHERE ZNAME=?", (rule,)),
+])
+open_openin()
+
+display_name = rule
+if prefix and rule.startswith(prefix):
+    display_name = rule[len(prefix):]
+    if display_name.startswith(" "):
+        display_name = display_name[1:]
+
+if auto_revert and minutes &gt; 0:
+    seconds = minutes * 60
+
+    # Write a self-contained Python revert script to disk
+    revert_py_path = os.path.join(work_dir, "revert.py")
+    revert_py_content = (
+        "#!/usr/bin/env python3\n"
+        "# -*- coding: utf-8 -*-\n"
+        "import sqlite3, subprocess, sys, time, os\n"
+        "\n"
+        "log = open(" + repr(os.path.join(work_dir, "revert.log")) + ", 'a')\n"
+        "def L(msg):\n"
+        "    log.write(time.strftime('[%Y-%m-%d %H:%M:%S] ') + str(msg) + '\\n')\n"
+        "    log.flush()\n"
+        "\n"
+        "L('revert.py started, PID=' + str(os.getpid()) + ', PPID=' + str(os.getppid()))\n"
+        "L('sleeping ' + str(" + str(seconds) + ") + 's')\n"
+        "time.sleep(" + str(seconds) + ")\n"
+        "L('woke up, quitting OpenIn')\n"
+        "subprocess.run(['osascript', '-e', 'tell application " + repr(app_name)[1:-1] + " to quit'], capture_output=True)\n"
+        "time.sleep(1)\n"
+        "L('updating database')\n"
+        "db = " + repr(db_path) + "\n"
+        "default_rule = " + repr(default_rule) + "\n"
+        "try:\n"
+        "    conn = sqlite3.connect(db)\n"
+        "    exists = conn.execute('SELECT COUNT(*) FROM ZOPENINHANDLERRULE WHERE ZNAME=?', (default_rule,)).fetchone()[0]\n"
+        "    L('default rule exists=' + str(exists))\n"
+        "    if exists &gt; 0:\n"
+        "        conn.execute('UPDATE ZOPENINHANDLERRULE SET ZDISABLED=1')\n"
+        "        conn.execute('UPDATE ZOPENINHANDLERRULE SET ZDISABLED=0 WHERE ZNAME=?', (default_rule,))\n"
+        "    else:\n"
+        "        conn.execute('UPDATE ZOPENINHANDLERRULE SET ZDISABLED=1')\n"
+        "    conn.commit()\n"
+        "    conn.close()\n"
+        "    L('database updated')\n"
+        "except Exception as e:\n"
+        "    L('DB error: ' + str(e))\n"
+        "    sys.exit(1)\n"
+        "subprocess.run(['open', '-a', " + repr(openin_app) + "], capture_output=True)\n"
+        "subprocess.run(['osascript', '-e', 'display notification " + repr("「" + default_rule + "」に戻しました")[1:-1] + " with title " + repr("OpenIn")[1:-1] + "'], capture_output=True)\n"
+        "L('done')\n"
+        "log.close()\n"
+    )
+    with open(revert_py_path, "w") as f:
+        f.write(revert_py_content)
+    os.chmod(revert_py_path, 0o755)
+
+    # Initialize log
+    with open(log_file, "a") as f:
+        f.write(time.strftime("[%Y-%m-%d %H:%M:%S] ") +
+                "scheduling revert in " + str(minutes) + " min for rule '" + rule + "'\n")
+
+    # Launch detached using setsid via /bin/sh
+    # Using bash -c and disowning makes the process survive Alfred's cleanup
+    proc = subprocess.Popen(
+        ["/bin/bash", "-c",
+         "nohup /usr/bin/python3 " + repr(revert_py_path) + " &gt;&gt; " + repr(log_file) + " 2&gt;&amp;1 &amp;\n"
+         "echo $!"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+    out, _ = proc.communicate(timeout=2)
+    bg_pid = out.decode().strip()
+    with open(pid_file, "w") as f:
+        f.write(bg_pid + "\n")
+
+    print("「" + display_name + "」に切り替えました（" + str(minutes) + "分後に自動復帰）")
+else:
+    print("「" + display_name + "」に切り替えました（自動復帰なし）")
+PYEOF
+</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>189B652E-6137-4422-BD2E-726E7A274143</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>OpenIn Temporary Switch
+=======================
+
+Alfredから一時的にOpenInのHandler Ruleを切り替え、N分後に自動でデフォルトのRuleに戻すワークフロー。各ルールには、OpenInに登録されている起動アプリのアイコンが表示されます。
+
+使い方
+------
+1. OpenInで、切り替え対象にしたいルール名の先頭に接頭辞を付けます（デフォルト: 「[Mode] 」）。
+   例: 「[Mode] Work」「[Mode] Private」「[Mode] Research」
+2. 復帰先となるルールを「Default Rule Name」（デフォルト: 「Default」）と一致する名前で作成しておきます。
+3. Alfredで `oi` を実行します。接頭辞付きのルールだけが一覧に表示され、各行にはそのルールが起動するアプリのアイコンが表示されます。
+   選択すると、すべてのルールが無効化され、選択したルールのみ有効になります。
+4. 「Auto Revert」が有効な場合、N分後に自動で Default Rule に戻ります。
+
+キーワード
+----------
+- `oi`        マッチするすべてのルールを表示（デフォルト分数を使用）
+- `oi 30`    自動復帰を30分後に設定して表示
+- 一覧から「Default」を選ぶと即座に復帰します。
+
+必要なもの
+----------
+- OpenIn (https://loshadki.app/openin/) と、接頭辞付きのHandler Ruleが1つ以上。
+- `jq` および `sqlite3`（どちらもmacOSに標準搭載）。
+
+設定項目
+--------
+ワークフローの「Configure Workflow」パネルで以下を設定できます。
+
+- デフォルトのRule名: 復帰時に有効化するルール（デフォルト: Default）
+- Modeの接頭辞: 切替対象を識別する接頭辞（デフォルト: [Mode]）
+- デフォルトの分数: 自動復帰までの分数（デフォルト: 10）
+- 自動復帰: 自動でデフォルトに戻すかどうか（デフォルト: ON）
+- OpenIn DBのパス: local.sqlite のパス（空欄でデフォルトの場所）
+- OpenIn.app のパス: アプリのパスを上書き（空欄で自動検出）
+- フォールバックブラウザのパス: 紐づくアプリが見つからないときに使うアイコン
+
+備考
+----
+- 各ルールに紐づくアプリのうち、OpenInのリスト上で最上位にあるもの（ZAPPORDER最小）の `ZPATH` を使ってアイコンを解決します。`ZPATH` が空の場合はバンドルIDから `mdfind` で実パスを検索します。
+- 予約済みの自動復帰ジョブは /tmp/openin-alfred で管理しており、新しい切替を行うと古いジョブは破棄されます（多重予約されません）。
+- 将来的にOpenInのDBスキーマが変更されると、このワークフローも更新が必要になる可能性があります。</string>
+	<key>uidata</key>
+	<dict>
+		<key>189B652E-6137-4422-BD2E-726E7A274143</key>
+		<dict>
+			<key>xpos</key>
+			<real>280</real>
+			<key>ypos</key>
+			<real>130</real>
+		</dict>
+		<key>2135F3F8-47C5-495B-B16D-9D0B7FD2C882</key>
+		<dict>
+			<key>xpos</key>
+			<real>70</real>
+			<key>ypos</key>
+			<real>130</real>
+		</dict>
+		<key>6FB80A09-34C6-481C-B8FB-7431F1E760E9</key>
+		<dict>
+			<key>xpos</key>
+			<real>500</real>
+			<key>ypos</key>
+			<real>130</real>
+		</dict>
+	</dict>
+	<key>userconfigurationconfig</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>Default</string>
+				<key>placeholder</key>
+				<string>Default</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>復帰時に有効化するOpenInのルール名。OpenIn側のルール名と完全に一致している必要があります。一致するルールが存在しない場合は、すべてのルールが無効化されます。</string>
+			<key>label</key>
+			<string>デフォルトのRule名</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>DEFAULT_RULE_NAME</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>[Mode]</string>
+				<key>placeholder</key>
+				<string>[Mode]</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<false/>
+			</dict>
+			<key>description</key>
+			<string>切替対象とするルールを識別するための接頭辞。OpenIn側でこの接頭辞を付けたルール（例: 「[Mode] Work」）だけがAlfredの一覧に表示されます。表示時には接頭辞は取り除かれます。接頭辞が付いていないルールは表示も切り替えもされません。</string>
+			<key>label</key>
+			<string>Modeの接頭辞</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>MODE_PREFIX</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>10</string>
+				<key>placeholder</key>
+				<string>10</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>キーワードに数値が指定されなかった場合に使う、自動復帰までの分数。</string>
+			<key>label</key>
+			<string>デフォルトの分数</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>DEFAULT_MINUTES</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>有効にすると、指定した分数の経過後に自動でデフォルトのRuleへ戻ります。無効にすると、手動で戻すまで選択したルールが維持されます。</string>
+			<key>label</key>
+			<string>自動復帰</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>AUTO_REVERT</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string>~/Library/Group Containers/4QE86VV38D.app.loshadki.OpenIn/Library/Application Support/OpenIn/local.sqlite</string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>OpenInの local.sqlite のパス。空欄にするとプレースホルダーに表示されているデフォルトの場所が使われます。</string>
+			<key>label</key>
+			<string>OpenIn DBのパス</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>OPENIN_DB_PATH</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string>(auto-detect)</string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>OpenIn.app のパスを上書きします。空欄の場合は /Applications/OpenIn.app と /Applications/Setapp/OpenIn.app を自動検出します。</string>
+			<key>label</key>
+			<string>OpenIn.app のパス</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>OPENIN_APP_PATH</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>/Applications/Safari.app</string>
+				<key>placeholder</key>
+				<string>/Applications/Safari.app</string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>ルールに紐づくアプリが見つからない場合や、アプリのパスを解決できなかった場合に表示されるアイコンのパス。</string>
+			<key>label</key>
+			<string>フォールバックブラウザのパス</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>FALLBACK_BROWSER_APP_PATH</string>
+		</dict>
+	</array>
+	<key>variables</key>
+	<dict>
+		<key>AUTO_REVERT</key>
+		<string>true</string>
+		<key>DEFAULT_MINUTES</key>
+		<string>10</string>
+		<key>DEFAULT_RULE_NAME</key>
+		<string>Default</string>
+		<key>FALLBACK_BROWSER_APP_PATH</key>
+		<string>/Applications/Safari.app</string>
+		<key>MODE_PREFIX</key>
+		<string>[Mode]</string>
+		<key>OPENIN_APP_PATH</key>
+		<string></string>
+		<key>OPENIN_DB_PATH</key>
+		<string></string>
+	</dict>
+	<key>variablesdontexport</key>
+	<array/>
+	<key>version</key>
+	<string>1.0.0</string>
+	<key>webaddress</key>
+	<string>https://webrandum.net</string>
+</dict>
+</plist>

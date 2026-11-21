@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.31mskz10.ExecuteImageOptim</string>
+	<key>connections</key>
+	<dict>
+		<key>68451C64-6A9C-425B-8985-B19A0AC343A6</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6EB4E3E5-5AEE-467F-A955-2128BEDC55C8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>6EB4E3E5-5AEE-467F-A955-2128BEDC55C8</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>DCF28BA5-F9FF-4E07-80ED-5DF684A7D5D3</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>31mskz10</string>
+	<key>description</key>
+	<string>現在開いているフォルダ内の画像をImageOptimで開く</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Execute ImageOptim</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>1</integer>
+				<key>script</key>
+				<string>open -a ImageOptim.app {query}/*</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.terminalcommand</string>
+			<key>uid</key>
+			<string>DCF28BA5-F9FF-4E07-80ED-5DF684A7D5D3</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+  tell application "System Events"
+    set appName to name of the first process whose frontmost is true
+  end tell
+  if appName is "Finder" then
+    tell application "Finder"
+      set pathList to POSIX path of (folder of the front window as alias)
+      return pathList
+    end tell
+  else
+    tell application "Path Finder"
+      set pathList to POSIX path of the target of the front finder window
+      return pathList
+    end tell
+  end if
+end alfred_script</string>
+				<key>cachescript</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>6EB4E3E5-5AEE-467F-A955-2128BEDC55C8</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>io</string>
+				<key>subtext</key>
+				<string>現在開いているフォルダをImageOptimで開く</string>
+				<key>text</key>
+				<string>Execute ImageOptim</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>68451C64-6A9C-425B-8985-B19A0AC343A6</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>現在開いているフォルダ内の画像をImageOptimで開いて圧縮します</string>
+	<key>uidata</key>
+	<dict>
+		<key>68451C64-6A9C-425B-8985-B19A0AC343A6</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<integer>115</integer>
+		</dict>
+		<key>6EB4E3E5-5AEE-467F-A955-2128BEDC55C8</key>
+		<dict>
+			<key>xpos</key>
+			<integer>270</integer>
+			<key>ypos</key>
+			<integer>115</integer>
+		</dict>
+		<key>DCF28BA5-F9FF-4E07-80ED-5DF684A7D5D3</key>
+		<dict>
+			<key>xpos</key>
+			<integer>440</integer>
+			<key>ypos</key>
+			<integer>115</integer>
+		</dict>
+	</dict>
+	<key>variablesdontexport</key>
+	<array/>
+	<key>version</key>
+	<string>1.0.0</string>
+	<key>webaddress</key>
+	<string>https://webrandum.net</string>
+</dict>
+</plist>

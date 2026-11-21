@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.31mskz10.cleanshot-x-actions</string>
+	<key>connections</key>
+	<dict>
+		<key>1CF47357-F134-43BD-8B57-8DAE1856163E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>37E33749-05C9-4AE3-8902-60B31B8A56E5</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>31mskz10</string>
+	<key>description</key>
+	<string>CleanShot XのアクションURLを検索・実行する</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>CleanShot X Actions</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>browser</key>
+				<string></string>
+				<key>skipqueryencode</key>
+				<false/>
+				<key>skipvarencode</key>
+				<false/>
+				<key>spaces</key>
+				<string></string>
+				<key>url</key>
+				<string>{query}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>37E33749-05C9-4AE3-8902-60B31B8A56E5</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<true/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>cs</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>#!/usr/bin/env python3
+import json
+import os
+import re
+import sys
+import time
+import urllib.request
+from pathlib import Path
+
+DOC_URL = "https://cleanshot.com/docs-api"
+CACHE_DAYS = 7
+
+CACHE_DIR = Path(
+    os.environ.get(
+        "alfred_workflow_cache",
+        str(Path.home() / "Library/Caches/com.chatgpt.cleanshotx.actions"),
+    )
+)
+
+CACHE_FILE = CACHE_DIR / "commands.json"
+
+ACTIONS = ["copy", "save", "annotate", "upload", "pin"]
+
+RUNNABLE_COMMANDS = {
+    "all-in-one",
+    "capture-area",
+    "capture-previous-area",
+    "capture-fullscreen",
+    "capture-window",
+    "self-timer",
+    "scrolling-capture",
+    "pin",
+    "record-screen",
+    "capture-text",
+    "open-annotate",
+    "open-from-clipboard",
+    "toggle-desktop-icons",
+    "hide-desktop-icons",
+    "show-desktop-icons",
+    "open-history",
+    "restore-recently-closed",
+    "open-settings",
+}
+ACTION_COMMANDS = {
+    "capture-area",
+    "capture-previous-area",
+    "capture-fullscreen",
+    "capture-window",
+    "self-timer",
+}
+
+FALLBACK_COMMANDS = sorted(RUNNABLE_COMMANDS)
+
+
+def titleize(value):
+    return value.replace("-", " ").title()
+
+
+def load_cache():
+    if not CACHE_FILE.exists():
+        return None
+
+    age = time.time() - CACHE_FILE.stat().st_mtime
+    if age &gt; CACHE_DAYS * 24 * 60 * 60:
+        return None
+
+    try:
+        data = json.loads(CACHE_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+    if not isinstance(data, list):
+        return None
+
+    commands = sorted({c for c in data if isinstance(c, str)} &amp; RUNNABLE_COMMANDS)
+    return commands or None
+
+
+def save_cache(commands):
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    CACHE_FILE.write_text(
+        json.dumps(commands, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+
+def fetch_commands():
+    req = urllib.request.Request(
+        DOC_URL,
+        headers={"User-Agent": "Alfred CleanShot X Workflow"},
+    )
+
+    with urllib.request.urlopen(req, timeout=8) as response:
+        html = response.read().decode("utf-8", errors="ignore")
+
+    found = set(
+        re.findall(r"cleanshot://([a-z0-9][a-z0-9-]*)\b", html)
+    )
+
+    commands = sorted(found &amp; RUNNABLE_COMMANDS)
+
+    return commands or FALLBACK_COMMANDS
+
+
+def get_commands():
+    cached = load_cache()
+    if cached:
+        return cached
+
+    try:
+        commands = fetch_commands()
+        save_cache(commands)
+        return commands
+    except Exception:
+        return FALLBACK_COMMANDS
+
+
+def make_items(commands, query):
+    query_lower = query.lower().strip()
+    items = []
+
+    for command in commands:
+        base_url = f"cleanshot://{command}"
+        title = titleize(command)
+        haystack = f"{command} {title}".lower()
+
+        if not query_lower or query_lower in haystack:
+            items.append({
+                "title": title,
+                "subtitle": base_url,
+                "arg": base_url,
+                "uid": command,
+            })
+
+        if command in ACTION_COMMANDS:
+            for action in ACTIONS:
+                action_url = f"{base_url}?action={action}"
+                action_title = f"{title} -&gt; {titleize(action)}"
+                action_haystack = f"{command} {title} {action}".lower()
+
+                if not query_lower or query_lower in action_haystack:
+                    items.append({
+                        "title": action_title,
+                        "subtitle": action_url,
+                        "arg": action_url,
+                        "uid": f"{command}-{action}",
+                    })
+
+    if not items:
+        items.append({
+            "title": "No CleanShot X command found",
+            "subtitle": "Try another query",
+            "valid": False,
+        })
+
+    return items
+
+
+def main():
+    query = " ".join(sys.argv[1:]) if len(sys.argv) &gt; 1 else ""
+    commands = get_commands()
+    items = make_items(commands, query)
+
+    print(json.dumps({"items": items}, ensure_ascii=False))
+
+
+if __name__ == "__main__":
+    main()</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Search {query}</string>
+				<key>title</key>
+				<string>CleanShot X Action</string>
+				<key>type</key>
+				<integer>9</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>1CF47357-F134-43BD-8B57-8DAE1856163E</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>1CF47357-F134-43BD-8B57-8DAE1856163E</key>
+		<dict>
+			<key>xpos</key>
+			<real>105</real>
+			<key>ypos</key>
+			<real>175</real>
+		</dict>
+		<key>37E33749-05C9-4AE3-8902-60B31B8A56E5</key>
+		<dict>
+			<key>xpos</key>
+			<real>265</real>
+			<key>ypos</key>
+			<real>175</real>
+		</dict>
+	</dict>
+	<key>userconfigurationconfig</key>
+	<array/>
+	<key>variablesdontexport</key>
+	<array/>
+	<key>version</key>
+	<string>1.0.0</string>
+	<key>webaddress</key>
+	<string>https://webrandum.net</string>
+</dict>
+</plist>

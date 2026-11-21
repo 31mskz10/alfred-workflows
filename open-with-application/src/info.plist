@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.31mskz10.openWithApplication</string>
+	<key>connections</key>
+	<dict>
+		<key>0819599D-00D9-499E-8381-D77ABBD144BB</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>65FE2922-9071-4E69-B368-F9E45462E0EE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>CE95F3DF-4C60-4086-9E5D-540FF58B80BF</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string>Find files and folders and open with {query}</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>B1A066ED-8014-4B0B-A714-AA169C63FACA</string>
+				<key>modifiers</key>
+				<integer>131072</integer>
+				<key>modifiersubtext</key>
+				<string>Open with {query} and...</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>252BDB93-F75E-4996-B8D1-3F0B481BFADC</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>0819599D-00D9-499E-8381-D77ABBD144BB</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>85D1F563-6429-4A69-ABB3-FFE6106C55F6</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>65FE2922-9071-4E69-B368-F9E45462E0EE</key>
+		<array/>
+		<key>85D1F563-6429-4A69-ABB3-FFE6106C55F6</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>65FE2922-9071-4E69-B368-F9E45462E0EE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>CE95F3DF-4C60-4086-9E5D-540FF58B80BF</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string>Find files and folders and open with {query}</string>
+				<key>vitoclose</key>
+				<true/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>B1A066ED-8014-4B0B-A714-AA169C63FACA</string>
+				<key>modifiers</key>
+				<integer>131072</integer>
+				<key>modifiersubtext</key>
+				<string>Open with {query} and...</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>A8C10A6D-D258-49A5-A53F-FD69F3116AE1</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>2C8535CB-7CAF-4EFD-BA4B-6D00319DD2F5</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>B1A066ED-8014-4B0B-A714-AA169C63FACA</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A8C10A6D-D258-49A5-A53F-FD69F3116AE1</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>BCEFC993-226B-45EB-8EF6-326C9D98790C</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>0819599D-00D9-499E-8381-D77ABBD144BB</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>85D1F563-6429-4A69-ABB3-FFE6106C55F6</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>CE95F3DF-4C60-4086-9E5D-540FF58B80BF</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>EED50B9F-82B6-46D5-B691-6D0F4C64A1D2</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>EED50B9F-82B6-46D5-B691-6D0F4C64A1D2</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1F3C552-2266-490F-8FB3-D29F386B2CC1</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>31mskz10</string>
+	<key>description</key>
+	<string>選択したフォルダをアプリで開く</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Open with Application</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>31</integer>
+				<key>hotmod</key>
+				<integer>1966080</integer>
+				<key>hotstring</key>
+				<string>O</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>BCEFC993-226B-45EB-8EF6-326C9D98790C</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)	set finderSelection to ""	set theTarget to ""
+	set appName to q	set appPath to path to application appName	set defaultTarget to (path to home folder as alias)	tell application "System Events"		set selectApp to name of the first process whose frontmost is true	end tell	-- comment line above and uncomment line below to open desktop instead of user home when there's no selection or open folder in the Finder:	-- set defaultTarget to (path to desktop folder as alias)	if selectApp is "Finder" then		tell application "Finder"			set finderSelection to (get selection)			if length of finderSelection is greater than 0 then				set theTarget to finderSelection			else				try					set theTarget to POSIX path of the target of the front finder window				on error					set theTarget to defaultTarget				end try			end if			tell application "Finder"				open theTarget using appPath			end tell		end tell	else		tell application "Path Finder"
+			set theTarget to {}
+			repeat with pfItem in (get selection)
+				set the end of theTarget to POSIX path of pfItem
+			end repeat		end tell		tell application appName			open theTarget		end tell	end ifend alfred_script</string>
+				<key>cachescript</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>65FE2922-9071-4E69-B368-F9E45462E0EE</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<true/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>2</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>o</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>…</string>
+				<key>script</key>
+				<string>#!/usr/bin/env zsh
+
+query="$1"  # 使わないが残しておく
+
+# 検索対象フォルダ
+folders=( "/Applications" "/Users/${USER}/Applications" )
+
+# キャッシュ関連
+cache_dir="${alfred_workflow_cache:-/tmp}"
+cache_file="${cache_dir}/apps_list.txt"
+cache_ttl=604800  # 1週間
+mkdir -p "$cache_dir"
+
+# キャッシュ更新チェック
+need_update_cache=0
+if [[ ! -f "$cache_file" ]]; then
+  need_update_cache=1
+else
+  now_epoch=$(date +%s)
+  mtime_epoch=$(stat -f %m "$cache_file" 2&gt;/dev/null || echo 0)
+  (( now_epoch - mtime_epoch &gt; cache_ttl )) &amp;&amp; need_update_cache=1
+fi
+
+# キャッシュ更新：find するのはここだけ
+if (( need_update_cache )); then
+  : &gt; "$cache_file"
+  for f in "${folders[@]}"; do
+    if [[ -d "$f" ]]; then
+      find "$f" -maxdepth 2 -type d -name "*.app" &gt;&gt; "$cache_file"
+    fi
+  done
+fi
+
+# キャッシュから読み込んでそのまま全部返す（←重要）
+items=()
+while IFS= read -r app; do
+  [[ -z "$app" ]] &amp;&amp; continue
+
+  name="${app##*/}"
+  name="${name%.app}"
+
+  # ここではフィルタしない（Alfred に任せる）
+  items+=( "$(printf '{"title":"%s","subtitle":"%s","arg":"%s","icon":{"type":"fileicon","path":"%s"}}' \
+                     "$name" "$app" "$app" "$app")" )
+done &lt; "$cache_file"
+
+printf '{ "items": [ %s ] }' "$(IFS=,; echo "${items[*]}")"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>選択したアプリケーションでフォルダを開く</string>
+				<key>title</key>
+				<string>Open with Application</string>
+				<key>type</key>
+				<integer>5</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>0819599D-00D9-499E-8381-D77ABBD144BB</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>on run argv	set finderSelection to ""	set theTarget to ""	set appName to (system attribute "application")	set appPath to path to application appName	set defaultTarget to (path to home folder as alias)	tell application "System Events"		set selectApp to name of the first process whose frontmost is true	end tell		set targets to {}		set oldDelimiters to text item delimiters		set text item delimiters to tab		set qArray to every text item of argv		set text item delimiters to oldDelimiters		repeat with atarget in qArray						if atarget starts with "~" then				set userHome to POSIX path of (path to home folder)				if userHome ends with "/" then					set userHome to characters 1 thru -2 of userHome as string				end if								try					set atarget to userHome &amp; characters 2 thru -1 of atarget as string				on error					set atarget to userHome				end try							end if						set targetAlias to ((POSIX file atarget) as alias)			set targets to targets &amp; targetAlias		end repeat				set theTarget to targets				tell application "Finder"			open theTarget using appPath		end tell
+end run</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>6</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>A1F3C552-2266-490F-8FB3-D29F386B2CC1</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>anchorfields</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>daterange</key>
+				<integer>0</integer>
+				<key>fields</key>
+				<array>
+					<dict>
+						<key>field</key>
+						<string>kMDItemDisplayName</string>
+						<key>not</key>
+						<false/>
+						<key>split</key>
+						<true/>
+						<key>value</key>
+						<string>{query}</string>
+						<key>words</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>field</key>
+						<string>kMDItemAlternateNames</string>
+						<key>not</key>
+						<false/>
+						<key>split</key>
+						<true/>
+						<key>value</key>
+						<string>{query}</string>
+						<key>words</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>field</key>
+						<string>kMDItemFinderComment</string>
+						<key>not</key>
+						<false/>
+						<key>split</key>
+						<true/>
+						<key>value</key>
+						<string>{query}</string>
+						<key>words</key>
+						<true/>
+					</dict>
+				</array>
+				<key>includesystem</key>
+				<false/>
+				<key>limit</key>
+				<integer>0</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>scopes</key>
+				<array/>
+				<key>sortmode</key>
+				<integer>0</integer>
+				<key>subtext</key>
+				<string>Find files and folders and open with {var:application}</string>
+				<key>title</key>
+				<string>Open with {var:application}</string>
+				<key>types</key>
+				<array/>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.filefilter</string>
+			<key>uid</key>
+			<string>EED50B9F-82B6-46D5-B691-6D0F4C64A1D2</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>availableviaurlhandler</key>
+				<false/>
+				<key>triggerid</key>
+				<string>open</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>252BDB93-F75E-4996-B8D1-3F0B481BFADC</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>passthroughargument</key>
+				<false/>
+				<key>variables</key>
+				<dict>
+					<key>application</key>
+					<string>{query}</string>
+				</dict>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>CE95F3DF-4C60-4086-9E5D-540FF58B80BF</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>fixedorder</key>
+				<false/>
+				<key>items</key>
+				<string>[{"imagefile":"c8d6460468ceea5992b1568dd52d3770879441ab.png","title":"Firefox","arg":"Firefox","subtitle":"open with \"Firefox\""},{"imagefile":"28e90dc7acff8674ca942ff6722b666c9c8fcba2.png","title":"Google Chrome","arg":"Google Chrome","subtitle":"open with \"Google Chrome\""},{"imagefile":"2e2236918e4ad62545266eaed99085b4ec48de0a.png","title":"ImageOptim","arg":"ImageOptim","subtitle":"open with \"ImageOptim\""},{"imagefile":"1ba5b8e92eedafa187d5be95bff3ba6b41c0f6eb.png","title":"iTerm","arg":"iTerm","subtitle":"open with \"iTerm\""},{"imagefile":"206529b3364a235939a016fde19ed4f7467c7e09.png","title":"Jedit Ω","arg":"Jedit Ω","subtitle":"open with \"Jedit Ω\""},{"imagefile":"4defb53a155e66b748cf1789cd6559c8f120b831.png","title":"Kaleidoscope","arg":"Kaleidoscope","subtitle":"open with \"Kaleidoscope\""},{"imagefile":"2fa5286deb0347eea642a327302c9898d7c645de.png","title":"Keynote","arg":"Keynote","subtitle":"open with \"Keynote\""},{"imagefile":"0acb38db283f542ac7d3a872e5e3856592d6d486.png","title":"MacDown","arg":"MacDown","subtitle":"open with \"MacDown\""},{"imagefile":"720b9d726b29ce639cdf2337e66840b304091ffb.png","title":"MacVim","arg":"MacVim","subtitle":"open with \"MacVim\""},{"imagefile":"1f97af7041d3bbbd9420f42ca84987b8e1610079.png","title":"MacZip4Win","arg":"MacZip4Win","subtitle":"open with \"MacZip4Win\""},{"imagefile":"9fd64eacc87f194032c70f670ece9ac3c2d2bcef.png","title":"Microsoft Excel","arg":"Microsoft Excel","subtitle":"open with \"Microsoft Excel\""},{"imagefile":"313f6c7bab07f59bc71d014bb901fbf54fd18dd1.png","title":"Microsoft OneNote","arg":"Microsoft OneNote","subtitle":"open with \"Microsoft OneNote\""},{"imagefile":"d728fbf6bfe0a9c12eae17699ebc0e7d3520887a.png","title":"Microsoft Outlook","arg":"Microsoft Outlook","subtitle":"open with \"Microsoft Outlook\""},{"imagefile":"4fe5aa1997184b4900ba05483b81d3b4c0ed89d8.png","title":"Microsoft PowerPoint","arg":"Microsoft PowerPoint","subtitle":"open with \"Microsoft PowerPoint\""},{"imagefile":"b05efef77b7867fe2bdff9f59928c52b1604016e.png","title":"Microsoft Word","arg":"Microsoft Word","subtitle":"open with \"Microsoft Word\""},{"imagefile":"ec034470962eae499fca07ff54cfcc15c3fe20a1.png","title":"MiniShadow","arg":"MiniShadow","subtitle":"open with \"MiniShadow\""},{"imagefile":"a910d2a86522a4abd5565ec2fad3a08cc0756210.png","title":"Numbers","arg":"Numbers","subtitle":"open with \"Numbers\""},{"imagefile":"65d725d336b2cb67e0c719b1dc5189dfc047a810.png","title":"Safari","arg":"Safari","subtitle":"open with \"Safari\""},{"imagefile":"c6a3e43f9400f5b07cb04c097136d5daa384ff48.png","title":"ScreenFlow","arg":"ScreenFlow","subtitle":"open with \"ScreenFlow\""},{"imagefile":"3a60e1e71de1f48878d340109698022fd7fb98a2.png","title":"Sublime Text","arg":"Sublime Text","subtitle":"open with \"Sublime Text\""},{"imagefile":"fb783a13b7864e8cad4c7a0f9ca9ea7219d3ba36.png","title":"Visual Studio Code","arg":"Visual Studio Code","subtitle":"open with \"Visual Studio Code\""},{"imagefile":"d19807a70515dc654b05c262dca6d5eb380b0f5c.png","title":"Dropbox","arg":"Dropbox","subtitle":"open with \"Dropbox\""},{"imagefile":"60297e1af40d8afbd54744a7c61152493be64400.png","title":"Warp","arg":"Warp","subtitle":"open with \"Warp\""},{"imagefile":"bec0916ac46be721e3e6f20424a491314fa1162d.png","title":"Cursor","arg":"Cursor","subtitle":"open with \"Cursor\""}]</string>
+				<key>keyword</key>
+				<string>ol</string>
+				<key>matchmode</key>
+				<integer>0</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>subtext</key>
+				<string>選択したアプリケーションでフォルダを開く</string>
+				<key>title</key>
+				<string>Open with Application</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.listfilter</string>
+			<key>uid</key>
+			<string>85D1F563-6429-4A69-ABB3-FFE6106C55F6</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)	set finderSelection to ""	set theTarget to ""
+	set appName to q	set appPath to path to application appName	set defaultTarget to (path to home folder as alias)	tell application "System Events"		set selectApp to name of the first process whose frontmost is true	end tell	-- comment line above and uncomment line below to open desktop instead of user home when there's no selection or open folder in the Finder:	-- set defaultTarget to (path to desktop folder as alias)	if selectApp is "Finder" then		tell application "Finder"			set finderSelection to (get selection)			if length of finderSelection is greater than 0 then				set theTarget to finderSelection			else				try					set theTarget to POSIX path of the target of the front finder window				on error					set theTarget to defaultTarget				end try			end if			tell application "Finder"				open theTarget using appPath			end tell		end tell	else		tell application "Path Finder"
+			set theTarget to {}
+			repeat with pfItem in (get selection)
+				set the end of theTarget to POSIX path of pfItem
+			end repeat		end tell		tell application appName			open theTarget		end tell	end ifend alfred_script</string>
+				<key>cachescript</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>B1A066ED-8014-4B0B-A714-AA169C63FACA</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>externaltriggerid</key>
+				<string>open</string>
+				<key>passinputasargument</key>
+				<false/>
+				<key>passvariables</key>
+				<false/>
+				<key>workflowbundleid</key>
+				<string>self</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.callexternaltrigger</string>
+			<key>uid</key>
+			<string>2C8535CB-7CAF-4EFD-BA4B-6D00319DD2F5</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>seconds</key>
+				<string>1</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.delay</string>
+			<key>uid</key>
+			<string>A8C10A6D-D258-49A5-A53F-FD69F3116AE1</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>キーワードの後にアプリケーション名を入れると、現在Finderで選択しているファイル・フォルダを開けます（Path Finderにも対応）。
+
+[ol]キーワードの場合は、選択するアプリケーションをあらかじめ「List Filter」に登録したアプリケーションの中から検索して実行できます。
+「List Filter」に追加する場合は「Arg」の値が正式なアプリケーション名になっている必要があります。</string>
+	<key>uidata</key>
+	<dict>
+		<key>0819599D-00D9-499E-8381-D77ABBD144BB</key>
+		<dict>
+			<key>xpos</key>
+			<real>275</real>
+			<key>ypos</key>
+			<real>45</real>
+		</dict>
+		<key>252BDB93-F75E-4996-B8D1-3F0B481BFADC</key>
+		<dict>
+			<key>xpos</key>
+			<real>70</real>
+			<key>ypos</key>
+			<real>190</real>
+		</dict>
+		<key>2C8535CB-7CAF-4EFD-BA4B-6D00319DD2F5</key>
+		<dict>
+			<key>xpos</key>
+			<real>745</real>
+			<key>ypos</key>
+			<real>320</real>
+		</dict>
+		<key>65FE2922-9071-4E69-B368-F9E45462E0EE</key>
+		<dict>
+			<key>xpos</key>
+			<real>745</real>
+			<key>ypos</key>
+			<real>45</real>
+		</dict>
+		<key>85D1F563-6429-4A69-ABB3-FFE6106C55F6</key>
+		<dict>
+			<key>xpos</key>
+			<real>280</real>
+			<key>ypos</key>
+			<real>320</real>
+		</dict>
+		<key>A1F3C552-2266-490F-8FB3-D29F386B2CC1</key>
+		<dict>
+			<key>xpos</key>
+			<real>745</real>
+			<key>ypos</key>
+			<real>180</real>
+		</dict>
+		<key>A8C10A6D-D258-49A5-A53F-FD69F3116AE1</key>
+		<dict>
+			<key>xpos</key>
+			<real>650</real>
+			<key>ypos</key>
+			<real>350</real>
+		</dict>
+		<key>B1A066ED-8014-4B0B-A714-AA169C63FACA</key>
+		<dict>
+			<key>xpos</key>
+			<real>500</real>
+			<key>ypos</key>
+			<real>320</real>
+		</dict>
+		<key>BCEFC993-226B-45EB-8EF6-326C9D98790C</key>
+		<dict>
+			<key>xpos</key>
+			<real>70</real>
+			<key>ypos</key>
+			<real>45</real>
+		</dict>
+		<key>CE95F3DF-4C60-4086-9E5D-540FF58B80BF</key>
+		<dict>
+			<key>xpos</key>
+			<real>495</real>
+			<key>ypos</key>
+			<real>210</real>
+		</dict>
+		<key>EED50B9F-82B6-46D5-B691-6D0F4C64A1D2</key>
+		<dict>
+			<key>xpos</key>
+			<real>565</real>
+			<key>ypos</key>
+			<real>180</real>
+		</dict>
+	</dict>
+	<key>userconfigurationconfig</key>
+	<array/>
+	<key>variablesdontexport</key>
+	<array/>
+	<key>version</key>
+	<string>2.0.0</string>
+	<key>webaddress</key>
+	<string>https://webrandum.net</string>
+</dict>
+</plist>
