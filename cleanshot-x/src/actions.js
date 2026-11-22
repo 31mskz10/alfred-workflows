@@ -1,5 +1,5 @@
 #!/usr/bin/osascript -l JavaScript
-ObjC.import('Foundation');
+ObjC.import('AppKit');
 
 const COMMANDS = {
     'all-in-one': 'オールインワン',
@@ -23,6 +23,17 @@ const COMMANDS = {
 };
 const CAPTURES = ['capture-area', 'capture-previous-area', 'capture-fullscreen', 'capture-window', 'self-timer'];
 const ACTIONS = {copy: 'コピー', save: '保存', annotate: '注釈', upload: 'アップロード', pin: 'ピン留め'};
+const TERMS = {
+    'capture-fullscreen': '画面',
+    'hide-desktop-icons': 'アイコン',
+    'open-annotate': 'ツール',
+    'record-screen': '録画',
+    'restore-recently-closed': '最近 閉じた もの 復元',
+    'scrolling-capture': 'スクロール キャプチャ',
+    'self-timer': 'タイマー',
+    'show-desktop-icons': 'アイコン',
+    'toggle-desktop-icons': 'アイコン'
+};
 
 function japanese() {
     const language = ObjC.unwrap($.NSProcessInfo.processInfo.environment.objectForKey('language')) || 'auto';
@@ -34,23 +45,32 @@ function titleize(value) {
     return value.split('-').map(word => word[0].toUpperCase() + word.slice(1)).join(' ');
 }
 
+function words(command) {
+    const japanese = COMMANDS[command];
+    return [japanese, japanese.replace(/を|の|に|から/g, ' '), TERMS[command] || ''].join(' ');
+}
+
 function item(uid, title, url, match) {
     return {uid: uid, title: title, subtitle: url, arg: url, match: match};
 }
 
 function run() {
     const ja = japanese();
+    if ($.NSWorkspace.sharedWorkspace.URLForApplicationToOpenURL($.NSURL.URLWithString('cleanshot://all-in-one')).isNil()) {
+        return JSON.stringify({items: [{title: ja ? 'CleanShot Xが見つかりません' : 'CleanShot X not found',
+            subtitle: ja ? 'CleanShot Xをインストールしてください' : 'Install CleanShot X', valid: false}]});
+    }
     const items = [];
     Object.keys(COMMANDS).forEach(command => {
         const url = 'cleanshot://' + command;
         const english = titleize(command);
         const title = ja ? COMMANDS[command] : english;
-        items.push(item(command, title, url, [command, english, COMMANDS[command]].join(' ')));
+        items.push(item(command, title, url, [command, english, words(command)].join(' ')));
         if (CAPTURES.indexOf(command) < 0) return;
         Object.keys(ACTIONS).forEach(action => {
             items.push(item(command + '-' + action,
                 title + ' → ' + (ja ? ACTIONS[action] : titleize(action)), url + '?action=' + action,
-                [command, english, COMMANDS[command], action, ACTIONS[action]].join(' ')));
+                [command, english, words(command), action, ACTIONS[action]].join(' ')));
         });
     });
     return JSON.stringify({items: items});

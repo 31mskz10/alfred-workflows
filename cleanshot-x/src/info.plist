@@ -105,7 +105,7 @@
 	<string>CleanShot Xの撮影・録画・注釈などのアクションを検索して実行します。
 Search and run CleanShot X capture, recording and annotation actions.
 
-Usage: cs [action name]</string>
+Usage: &lt;keyword&gt; [action name] (default keyword: cs)</string>
 	<key>uidata</key>
 	<dict>
 		<key>1CF47357-F134-43BD-8B57-8DAE1856163E</key>

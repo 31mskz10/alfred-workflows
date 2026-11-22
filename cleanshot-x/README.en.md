@@ -1,8 +1,8 @@
 # CleanShot X Actions
 
-[日本語](README.md) · [Download](https://github.com/31mskz10/alfred-workflows/releases/download/CleanShot_X_Actions/CleanShot.X.Actions.alfredworkflow)
+[日本語](README.md) · [Download](https://github.com/31mskz10/alfred-workflows/releases/download/CleanShot_X_Actions/CleanShot.X.Actions.alfredworkflow) · [Back to list](../README.md)
 
-Search and run CleanShot X capture, recording and annotation actions from Alfred. Requires macOS, Alfred Powerpack and CleanShot X.
+Search and run CleanShot X capture, recording and annotation actions from Alfred. Requires macOS, Alfred 5 or later, Alfred Powerpack and CleanShot X.
 
 ## Usage
 
@@ -13,6 +13,8 @@ Search and run CleanShot X capture, recording and annotation actions from Alfred
 Capture actions also have variants that copy, save, annotate, upload or pin the capture afterwards. Choosing `Upload` runs CleanShot X's upload.
 
 Available actions depend on the CleanShot X version you have installed.
+
+Changes from 1.0.0: Python 3 is no longer required. The action list is bundled with the workflow instead of being fetched from the CleanShot X website.
 
 ## Configuration
 
