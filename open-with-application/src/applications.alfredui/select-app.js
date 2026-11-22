@@ -1,6 +1,18 @@
 #!/usr/bin/osascript -l JavaScript
 ObjC.import('Foundation');
 
+function env(name) {
+    return ObjC.unwrap($.NSProcessInfo.processInfo.environment.objectForKey(name)) || '';
+}
+
+function applicationName(path) {
+    const parts = path.split('/');
+    const name = parts.pop().slice(0, -4);
+    const parent = parts.pop();
+    const suffix = parent.slice(name.length);
+    return parent.startsWith(name) && /^ 20\d{2}$/.test(suffix) ? parent : name;
+}
+
 function historyLimit() {
     const value = ObjC.unwrap($.NSProcessInfo.processInfo.environment.objectForKey('history_limit')) || '50';
     const limit = Number(value);
@@ -25,7 +37,9 @@ function recentSelections() {
 function run(args) {
     const path = args[0] || '';
     const mode = args[1] || 'open';
-    if (!path) return '{}';
+    if (!path || path.startsWith('{')) {
+        return JSON.stringify({update: {ids: {status: {text: japanese() ? '該当するアプリがありません。' : 'No matching applications.'}}}});
+    }
     const directory = Ref();
     if (!path.startsWith('/') || !path.endsWith('.app') ||
         !$.NSFileManager.defaultManager.fileExistsAtPathIsDirectory(path, directory) || !directory[0]) {
@@ -33,5 +47,12 @@ function run(args) {
     }
     if (['open', 'search', 'again'].indexOf(mode) < 0) return '{}';
     const history = recentSelections().concat(path).slice(-historyLimit());
-    return JSON.stringify({variables: {app_recent: JSON.stringify(history)}, finish: {args: path, variables: {owa_action: mode}}});
+    const name = applicationName(path);
+    const ja = japanese();
+    return JSON.stringify({variables: {app_recent: JSON.stringify(history)}, finish: {args: path, variables: {
+        owa_action: mode,
+        owa_targets: env('owa_targets'),
+        owa_title: ja ? name + 'で開く' : 'Open with ' + name,
+        owa_subtitle: ja ? '開くファイル・フォルダを検索して' + name + 'で開きます' : 'Find files and folders and open with ' + name
+    }}});
 }

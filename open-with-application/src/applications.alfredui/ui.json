@@ -19,6 +19,11 @@
       "src": "variable",
       "default": "50",
       "scriptenv": true
+    },
+    "owa_targets": {
+      "src": "variable",
+      "default": "",
+      "scriptenv": true
     }
   },
   "window": {
@@ -218,7 +223,7 @@
                               "components": [
                                 {
                                   "type": "label",
-                                  "text": "↑ ↓ ← →",
+                                  "text": "↑ ↓ ← → / Option＋← →",
                                   "font": {
                                     "size": 14,
                                     "weight": "medium"

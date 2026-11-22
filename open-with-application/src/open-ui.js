@@ -13,7 +13,7 @@ function run(args) {
     const query = input.slice(1);
     try {
         const result = Application('com.runningwithcrayons.Alfred').runTrigger('open', {
-            inWorkflow: 'com.31mskz10.openWithApplication',
+            inWorkflow: ObjC.unwrap($.NSProcessInfo.processInfo.environment.objectForKey('alfred_workflow_bundleid')) || 'com.31mskz10.openWithApplication',
             withArgument: query
         });
         if (typeof result === 'number' && result < 0) throw new Error('UIを起動できませんでした');

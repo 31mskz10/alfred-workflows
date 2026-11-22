@@ -1,12 +1,12 @@
 # Open with Application
 
-[日本語](README.md) · [Download](https://github.com/31mskz10/alfred-workflows/releases/download/Open_with_Application/Open.with.Application.alfredworkflow)
+[日本語](README.md) · [Download](https://github.com/31mskz10/alfred-workflows/releases/download/Open_with_Application/Open.with.Application.alfredworkflow) · [Back to list](../README.md)
 
 Open files and folders selected in Finder or Path Finder with an application. Requires macOS and Alfred 6 Powerpack.
 
 ## Setup
 
-Import the downloaded `.alfredworkflow`. Grant automation permissions when prompted. Applications are discovered automatically; configure the optional Hotkey in the workflow editor.
+Import the downloaded `.alfredworkflow`. Grant automation permissions when prompted: System Events (used to detect the frontmost app), Finder, and Path Finder. Applications are discovered automatically; configure the optional Hotkey in the workflow editor.
 
 ## Configuration
 
@@ -16,6 +16,7 @@ Select the workflow in Alfred Preferences and open Configure Workflow.
 | --- | --- | --- |
 | Language | Auto | Language of the displayed text. Auto uses Japanese when macOS's first preferred language is Japanese, English otherwise. |
 | Keyword | `o` | The keyword typed in Alfred. |
+| Default folder | Home | Opened when nothing is selected in Finder or Path Finder and no open folder can be found: Home or Desktop. |
 | History size | `50` | Number of recent selections to retain: an integer from 1 to 1000. Invalid values fall back to 50. |
 
 Reducing the limit discards older entries on the next confirmed selection. Increasing it does not restore discarded entries.
@@ -28,7 +29,7 @@ Reducing the limit discards older entries on the next confirmed selection. Incre
 
 | Key | Action |
 | --- | --- |
-| Arrow keys | Select an app |
+| Arrow keys, Option + Left / Right | Select an app |
 | Command + Left / Right | Move to the start / end of the query |
 | Return | Open selected items with the app |
 | Command + Return | Search for a file or folder to open |
@@ -36,7 +37,7 @@ Reducing the limit discards older entries on the next confirmed selection. Incre
 | Escape | Close |
 | Command + ? | Show keyboard shortcuts |
 
-Without a Finder selection, the current folder is used; without a Finder window, the home folder is used. If automatic launch fails, press Return on the fallback result.
+Without a selection in Finder or Path Finder, the folder open in the front window is used; without a window, or when the front window has no folder (such as Recents or search results), the "Default folder" setting (home folder by default) is used. When you pick another app with Shift + Return, the items chosen the first time are opened. Failures are shown as a notification. When another app is frontmost, the Finder selection is used. If automatic launch fails, press Return on the fallback result.
 
 ## Applications and recent history
 

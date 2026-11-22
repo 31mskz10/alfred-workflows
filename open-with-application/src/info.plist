@@ -33,12 +33,51 @@
 			</dict>
 		</array>
 		<key>65FE2922-9071-4E69-B368-F9E45462E0EE</key>
-		<array/>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>8E6CD756-A938-497B-B2F8-CB93EBADD87B</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>69F22951-34EA-4973-8D63-C824119502FF</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
 				<string>C63CBB6C-1D67-457C-887C-304F7C82ADAA</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>90A3A054-7047-4CBC-A8CC-A68B066680E7</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A8C10A6D-D258-49A5-A53F-FD69F3116AE1</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>sourceoutputuid</key>
+				<string>1A296813-527E-48FA-BA11-10B3E93F3EA1</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>A1F3C552-2266-490F-8FB3-D29F386B2CC1</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>8E6CD756-A938-497B-B2F8-CB93EBADD87B</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -64,7 +103,17 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>A8C10A6D-D258-49A5-A53F-FD69F3116AE1</string>
+				<string>8E6CD756-A938-497B-B2F8-CB93EBADD87B</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>90A3A054-7047-4CBC-A8CC-A68B066680E7</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -155,7 +204,7 @@
 	<key>createdby</key>
 	<string>31mskz10</string>
 	<key>description</key>
-	<string>Finderで選択中のファイル・フォルダを指定のアプリで開く</string>
+	<string>FinderまたはPath Finderで選択中のファイル・フォルダを指定のアプリで開く</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
@@ -196,55 +245,106 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-	set finderSelection to ""
-	set theTarget to ""
-	set appName to q
-	set appPath to path to application appName
-	set defaultTarget to (path to home folder as alias)
-	tell application "System Events"
-		set selectApp to name of the first process whose frontmost is true
-	end tell
-	-- comment line above and uncomment line below to open desktop instead of user home when there's no selection or open folder in the Finder:
-	-- set defaultTarget to (path to desktop folder as alias)
-	if selectApp is "Finder" then
-		tell application "Finder"
-			set finderSelection to (get selection)
-			if length of finderSelection is greater than 0 then
-				set theTarget to finderSelection
-			else
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>use framework "Foundation"
+use scripting additions
+
+on t(ja, en)
+	set lang to system attribute "language"
+	if lang is "ja" then return ja
+	if lang is "en" then return en
+	set preferred to (current application's NSLocale's preferredLanguages()'s firstObject()) as text
+	if preferred is "ja" or preferred starts with "ja-" then return ja
+	return en
+end t
+
+on failure(errMsg, errNum)
+	if errNum is -1743 then return my t("オートメーションの許可が必要です。システム設定 &gt; プライバシーとセキュリティ &gt; オートメーション で Alfred に Finder・Path Finder・System Events の制御を許可してください。", "Automation access is required. Allow Alfred to control Finder, Path Finder and System Events in System Settings &gt; Privacy &amp; Security &gt; Automation.")
+	return my t("開けませんでした: ", "Could not open: ") &amp; errMsg
+end failure
+
+on targetPaths()
+	set saved to (current application's NSProcessInfo's processInfo()'s environment()'s objectForKey:"owa_targets")
+	if saved is not missing value then
+		if (saved as text) is not "" then
+			set savedData to saved's dataUsingEncoding:(current application's NSUTF8StringEncoding)
+			set parsed to current application's NSJSONSerialization's JSONObjectWithData:savedData options:0 |error|:(missing value)
+			if parsed is not missing value then return parsed as list
+		end if
+	end if
+	set found to {}
+	set pathFinder to "Path Finder"
+	tell application "System Events" to set frontApp to name of first process whose frontmost is true
+	if frontApp is pathFinder then
+		tell application pathFinder
+			set sel to (get «property slcT»)
+			if sel is missing value then set sel to {}
+			repeat with anItem in sel
+				set end of found to «property pthP» of anItem
+			end repeat
+			if found is {} then
 				try
-					set theTarget to POSIX path of the target of the front finder window
-				on error
-					set theTarget to defaultTarget
+					set end of found to «property pthP» of «property tarG» of «class fwiD» 1
 				end try
 			end if
-			tell application "Finder"
-				open theTarget using appPath
-			end tell
 		end tell
 	else
-		tell application "Path Finder"
-			set theTarget to {}
-			repeat with pfItem in (get selection)
-				set the end of theTarget to POSIX path of pfItem
+		tell application "Finder"
+			repeat with anItem in (get selection)
+				set end of found to POSIX path of (anItem as alias)
 			end repeat
-		end tell
-		tell application appName
-			open theTarget
+			if found is {} then
+				try
+					set end of found to POSIX path of (target of front Finder window as alias)
+				end try
+			end if
 		end tell
 	end if
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
+	if found is {} then
+		if (system attribute "default_folder") is "desktop" then
+			set end of found to POSIX path of (path to desktop folder)
+		else
+			set end of found to POSIX path of (path to home folder)
+		end if
+	end if
+	return found
+end targetPaths
+
+on openPaths(appArg, paths)
+	set appPath to (POSIX file appArg) as alias
+	set theTarget to {}
+	repeat with targetPath in paths
+		set end of theTarget to ((POSIX file (targetPath as text)) as alias)
+	end repeat
+	tell application "Finder" to open theTarget using appPath
+end openPaths
+
+on run argv
+	try
+		my openPaths(item 1 of argv, my targetPaths())
+	on error errMsg number errNum
+		return my failure(errMsg, errNum)
+	end try
+	return ""
+end run
+</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>6</integer>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>65FE2922-9071-4E69-B368-F9E45462E0EE</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -301,46 +401,38 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>on run argv
-	set finderSelection to ""
-	set theTarget to ""
-	set appName to (system attribute "application")
-	set appPath to path to application appName
-	set defaultTarget to (path to home folder as alias)
-	tell application "System Events"
-		set selectApp to name of the first process whose frontmost is true
-	end tell
-		set targets to {}
+				<string>use framework "Foundation"
+use scripting additions
+
+on t(ja, en)
+	set lang to system attribute "language"
+	if lang is "ja" then return ja
+	if lang is "en" then return en
+	set preferred to (current application's NSLocale's preferredLanguages()'s firstObject()) as text
+	if preferred is "ja" or preferred starts with "ja-" then return ja
+	return en
+end t
+
+on run argv
+	try
+		set appPath to (POSIX file ((current application's NSProcessInfo's processInfo()'s environment()'s objectForKey:"application") as text)) as alias
+		set theTarget to {}
 		set oldDelimiters to text item delimiters
 		set text item delimiters to tab
-		set qArray to every text item of argv
-		set text item delimiters to oldDelimiters
-		repeat with atarget in qArray
-
-			if atarget starts with "~" then
-				set userHome to POSIX path of (path to home folder)
-				if userHome ends with "/" then
-					set userHome to characters 1 thru -2 of userHome as string
-				end if
-
-				try
-					set atarget to userHome &amp; characters 2 thru -1 of atarget as string
-				on error
-					set atarget to userHome
-				end try
-
-			end if
-
-			set targetAlias to ((POSIX file atarget) as alias)
-			set targets to targets &amp; targetAlias
+		repeat with anArg in argv
+			repeat with targetPath in text items of (anArg as text)
+				if (targetPath as text) is not "" then set end of theTarget to ((POSIX file (targetPath as text)) as alias)
+			end repeat
 		end repeat
-
-		set theTarget to targets
-
-		tell application "Finder"
-			open theTarget using appPath
-		end tell
-end run</string>
+		set text item delimiters to oldDelimiters
+		tell application "Finder" to open theTarget using appPath
+	on error errMsg number errNum
+		if errNum is -1743 then return my t("オートメーションの許可が必要です。システム設定 &gt; プライバシーとセキュリティ &gt; オートメーション で Alfred に Finder の制御を許可してください。", "Automation access is required. Allow Alfred to control Finder in System Settings &gt; Privacy &amp; Security &gt; Automation.")
+		return my t("開けませんでした: ", "Could not open: ") &amp; errMsg
+	end try
+	return ""
+end run
+</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -416,9 +508,9 @@ end run</string>
 				<key>sortmode</key>
 				<integer>0</integer>
 				<key>subtext</key>
-				<string>Find files and folders and open with {var:application}</string>
+				<string>{var:owa_subtitle}</string>
 				<key>title</key>
-				<string>Open with {var:application}</string>
+				<string>{var:owa_title}</string>
 				<key>types</key>
 				<array/>
 				<key>withspace</key>
@@ -469,55 +561,111 @@ end run</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-	set finderSelection to ""
-	set theTarget to ""
-	set appName to q
-	set appPath to path to application appName
-	set defaultTarget to (path to home folder as alias)
-	tell application "System Events"
-		set selectApp to name of the first process whose frontmost is true
-	end tell
-	-- comment line above and uncomment line below to open desktop instead of user home when there's no selection or open folder in the Finder:
-	-- set defaultTarget to (path to desktop folder as alias)
-	if selectApp is "Finder" then
-		tell application "Finder"
-			set finderSelection to (get selection)
-			if length of finderSelection is greater than 0 then
-				set theTarget to finderSelection
-			else
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>use framework "Foundation"
+use scripting additions
+
+on t(ja, en)
+	set lang to system attribute "language"
+	if lang is "ja" then return ja
+	if lang is "en" then return en
+	set preferred to (current application's NSLocale's preferredLanguages()'s firstObject()) as text
+	if preferred is "ja" or preferred starts with "ja-" then return ja
+	return en
+end t
+
+on failure(errMsg, errNum)
+	if errNum is -1743 then return my t("オートメーションの許可が必要です。システム設定 &gt; プライバシーとセキュリティ &gt; オートメーション で Alfred に Finder・Path Finder・System Events の制御を許可してください。", "Automation access is required. Allow Alfred to control Finder, Path Finder and System Events in System Settings &gt; Privacy &amp; Security &gt; Automation.")
+	return my t("開けませんでした: ", "Could not open: ") &amp; errMsg
+end failure
+
+on targetPaths()
+	set saved to (current application's NSProcessInfo's processInfo()'s environment()'s objectForKey:"owa_targets")
+	if saved is not missing value then
+		if (saved as text) is not "" then
+			set savedData to saved's dataUsingEncoding:(current application's NSUTF8StringEncoding)
+			set parsed to current application's NSJSONSerialization's JSONObjectWithData:savedData options:0 |error|:(missing value)
+			if parsed is not missing value then return parsed as list
+		end if
+	end if
+	set found to {}
+	set pathFinder to "Path Finder"
+	tell application "System Events" to set frontApp to name of first process whose frontmost is true
+	if frontApp is pathFinder then
+		tell application pathFinder
+			set sel to (get «property slcT»)
+			if sel is missing value then set sel to {}
+			repeat with anItem in sel
+				set end of found to «property pthP» of anItem
+			end repeat
+			if found is {} then
 				try
-					set theTarget to POSIX path of the target of the front finder window
-				on error
-					set theTarget to defaultTarget
+					set end of found to «property pthP» of «property tarG» of «class fwiD» 1
 				end try
 			end if
-			tell application "Finder"
-				open theTarget using appPath
-			end tell
 		end tell
 	else
-		tell application "Path Finder"
-			set theTarget to {}
-			repeat with pfItem in (get selection)
-				set the end of theTarget to POSIX path of pfItem
+		tell application "Finder"
+			repeat with anItem in (get selection)
+				set end of found to POSIX path of (anItem as alias)
 			end repeat
-		end tell
-		tell application appName
-			open theTarget
+			if found is {} then
+				try
+					set end of found to POSIX path of (target of front Finder window as alias)
+				end try
+			end if
 		end tell
 	end if
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
+	if found is {} then
+		if (system attribute "default_folder") is "desktop" then
+			set end of found to POSIX path of (path to desktop folder)
+		else
+			set end of found to POSIX path of (path to home folder)
+		end if
+	end if
+	return found
+end targetPaths
+
+on openPaths(appArg, paths)
+	set appPath to (POSIX file appArg) as alias
+	set theTarget to {}
+	repeat with targetPath in paths
+		set end of theTarget to ((POSIX file (targetPath as text)) as alias)
+	end repeat
+	tell application "Finder" to open theTarget using appPath
+end openPaths
+
+on run argv
+	try
+		set paths to my targetPaths()
+		my openPaths(item 1 of argv, paths)
+	on error errMsg number errNum
+		return my failure(errMsg, errNum)
+	end try
+	set pathsData to current application's NSJSONSerialization's dataWithJSONObject:paths options:0 |error|:(missing value)
+	set joined to (current application's NSString's alloc()'s initWithData:pathsData encoding:(current application's NSUTF8StringEncoding)) as text
+	set payload to current application's NSDictionary's dictionaryWithObject:(current application's NSDictionary's dictionaryWithObjects:{"", (current application's NSDictionary's dictionaryWithObject:joined forKey:"owa_targets")} forKeys:{"arg", "variables"}) forKey:"alfredworkflow"
+	set json to current application's NSJSONSerialization's dataWithJSONObject:payload options:0 |error|:(missing value)
+	return (current application's NSString's alloc()'s initWithData:json encoding:(current application's NSUTF8StringEncoding)) as text
+end run
+</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>6</integer>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>B1A066ED-8014-4B0B-A714-AA169C63FACA</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -527,7 +675,7 @@ end alfred_script</string>
 				<key>passinputasargument</key>
 				<false/>
 				<key>passvariables</key>
-				<false/>
+				<true/>
 				<key>workflowbundleid</key>
 				<string>self</string>
 			</dict>
@@ -626,18 +774,70 @@ end alfred_script</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Open with Application</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>8E6CD756-A938-497B-B2F8-CB93EBADD87B</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>conditions</key>
+				<array>
+					<dict>
+						<key>inputstring</key>
+						<string>{query}</string>
+						<key>matchcasesensitive</key>
+						<true/>
+						<key>matchmode</key>
+						<integer>0</integer>
+						<key>matchstring</key>
+						<string></string>
+						<key>outputlabel</key>
+						<string>succeeded</string>
+						<key>uid</key>
+						<string>1A296813-527E-48FA-BA11-10B3E93F3EA1</string>
+					</dict>
+				</array>
+				<key>elselabel</key>
+				<string>failed</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.conditional</string>
+			<key>uid</key>
+			<string>90A3A054-7047-4CBC-A8CC-A68B066680E7</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
-	<string>Finderで選択中のファイル・フォルダを指定のアプリで開く。
+	<string>FinderまたはPath Finderで選択中のファイル・フォルダを指定のアプリで開きます。
 
-Alfred 6 Powerpackが必要です。FinderまたはPath Finderで対象を選び、o に半角スペースを続けて入力するとアプリ一覧が開きます。方向キーでアプリを選択し、Enterで開きます。Command＋Enterでファイル検索、Shift＋Enterで開いた後にアプリを再選択します。アプリはApplicationsフォルダから自動取得します。
+Alfred 6 Powerpackが必要です。対象を選び、キーワード（初期値 o）に半角スペースを続けて入力するとアプリ一覧が開きます。方向キーでアプリを選択し、Enterで開きます。Command＋Enterでファイル検索、Shift＋Enterで開いた後にアプリを再選択します。選択がなければ開いているフォルダ、ウインドウもなければ「既定の場所」を開きます。アプリはApplicationsフォルダから自動取得します。
 
 Environment Variables:
 language: auto / ja / en (default: auto, macOS preferred language).
+keyword: keyword typed in Alfred (default: o).
+default_folder: home / desktop (default: home). Opened when nothing is selected and no folder is open.
 history_limit: 1–1000 (default: 50). Number of recent selections to retain.
 
-Finder / Path Finderで選択した項目をアプリで開きます。 / Open selected Finder / Path Finder items with an application.
-Type o followed by a space to open the app picker. Requires Alfred 6 Powerpack.</string>
+Open items selected in Finder or Path Finder with an application. Type the keyword (default: o) followed by a space to open the app picker. Requires Alfred 6 Powerpack.</string>
 	<key>uidata</key>
 	<dict>
 		<key>0819599D-00D9-499E-8381-D77ABBD144BB</key>
@@ -674,6 +874,20 @@ Type o followed by a space to open the app picker. Requires Alfred 6 Powerpack.<
 			<real>280</real>
 			<key>ypos</key>
 			<real>45</real>
+		</dict>
+		<key>8E6CD756-A938-497B-B2F8-CB93EBADD87B</key>
+		<dict>
+			<key>xpos</key>
+			<real>945</real>
+			<key>ypos</key>
+			<real>45</real>
+		</dict>
+		<key>90A3A054-7047-4CBC-A8CC-A68B066680E7</key>
+		<dict>
+			<key>xpos</key>
+			<real>580</real>
+			<key>ypos</key>
+			<real>350</real>
 		</dict>
 		<key>A1F3C552-2266-490F-8FB3-D29F386B2CC1</key>
 		<dict>
@@ -798,6 +1012,32 @@ Type o followed by a space to open the app picker. Requires Alfred 6 Powerpack.<
 			<string>textfield</string>
 			<key>variable</key>
 			<string>history_limit</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>home</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>ホーム / Home</string>
+						<string>home</string>
+					</array>
+					<array>
+						<string>デスクトップ / Desktop</string>
+						<string>desktop</string>
+					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string>FinderまたはPath Finderで何も選択しておらず、開いているフォルダも取得できないときに開く場所。 / Opened when nothing is selected in Finder or Path Finder and no open folder can be found.</string>
+			<key>label</key>
+			<string>既定の場所 / Default folder</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>default_folder</string>
 		</dict>
 	</array>
 	<key>variablesdontexport</key>
