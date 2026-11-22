@@ -102,7 +102,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>'/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli' --select-profile "$1" &amp;&amp; print -r -- "$1"</string>
+				<string>./profiles.js select "$1"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -143,7 +143,7 @@
 	<string>Karabiner-Elementsのプロファイル一覧を読み込み、Alfredから切り替えます。
 Lists your Karabiner-Elements profiles and switches between them.
 
-Usage: ke [profile name]</string>
+Usage: &lt;keyword&gt; [profile name] (default keyword: ke)</string>
 	<key>uidata</key>
 	<dict>
 		<key>0067CA6B-71B7-4384-9D14-470AF1082A7B</key>

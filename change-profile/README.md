@@ -6,13 +6,13 @@ Karabiner-ElementsのプロファイルをAlfredから切り替えます。プ�
 
 ## 必要なもの
 
-- macOS、Alfred Powerpack
+- macOS、Alfred 5以降、Alfred Powerpack
 - Karabiner-Elements
 
 ## 使い方
 
 1. Alfredで `ke` に続けてスペースを入力すると、プロファイルの一覧が表示されます。現在のプロファイルには「現在のプロファイル」と表示されます。
-2. プロファイル名で絞り込み、Enterを押します。切り替えが完了すると通知が表示されます。
+2. プロファイル名で絞り込み、Enterを押します。切り替えの結果が通知されます。失敗した場合は理由を表示します。
 
 コマンドは `/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli` を使用します。Karabiner-Elementsを標準の方法でインストールしていれば、この場所にあります。
 

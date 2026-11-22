@@ -5,14 +5,18 @@ const CLI = '/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabi
 const TEXT = {
     notFound: ['Karabiner-Elementsが見つかりません', 'Karabiner-Elements not found'],
     current: ['現在のプロファイル', 'Current profile'],
-    switchTo: ['このプロファイルに切り替える', 'Switch to this profile']
+    switchTo: ['このプロファイルに切り替える', 'Switch to this profile'],
+    readFailed: ['プロファイルを読み込めませんでした', 'Could not read profiles'],
+    switched: ['「%s」に切り替えました', 'Switched to "%s"'],
+    selectFailed: ['「%s」に切り替えられませんでした: ', 'Could not switch to "%s": '],
+    missing: ['Karabiner-Elementsにこのプロファイルがありません', 'the profile does not exist in Karabiner-Elements']
 };
 
-function t(key) {
+function t(key, value) {
     const language = ObjC.unwrap($.NSProcessInfo.processInfo.environment.objectForKey('language')) || 'auto';
     const ja = language === 'ja' || (language !== 'en' &&
         /^ja(?:-|$)/.test(ObjC.deepUnwrap($.NSLocale.preferredLanguages)[0] || 'en'));
-    return TEXT[key][ja ? 0 : 1];
+    return TEXT[key][ja ? 0 : 1].replace('%s', () => value);
 }
 
 function quote(value) {
@@ -25,16 +29,32 @@ function cli(option) {
     return app.doShellScript(quote(CLI) + ' ' + option);
 }
 
-function run() {
-    if (!$.NSFileManager.defaultManager.isExecutableFileAtPath(CLI)) {
-        return JSON.stringify({items: [{
-            title: t('notFound'),
-            subtitle: CLI,
-            valid: false
-        }]});
+function message(title, subtitle) {
+    return JSON.stringify({items: [{title: title, subtitle: subtitle, valid: false}]});
+}
+
+function select(name) {
+    try {
+        const names = cli('--list-profile-names').split(/\r\n|\r|\n/);
+        if (names.indexOf(name) < 0) return t('selectFailed', name) + t('missing');
+        cli('--select-profile=' + quote(name));
+        return t('switched', name);
+    } catch (error) {
+        return t('selectFailed', name) + error.message;
     }
-    const current = cli('--show-current-profile-name');
-    const names = cli('--list-profile-names').split(/\r\n|\r|\n/).filter(Boolean);
+}
+
+function run(argv) {
+    if (argv[0] === 'select') return select(argv[1] || '');
+    if (!$.NSFileManager.defaultManager.isExecutableFileAtPath(CLI)) return message(t('notFound'), CLI);
+    let current;
+    let names;
+    try {
+        current = cli('--show-current-profile-name');
+        names = cli('--list-profile-names').split(/\r\n|\r|\n/).filter(Boolean);
+    } catch (error) {
+        return message(t('readFailed'), error.message);
+    }
     return JSON.stringify({items: names.map(name => ({
         uid: name,
         title: name,
