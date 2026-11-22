@@ -87,29 +87,43 @@ on t(ja, en)
 end t
 
 on run argv
-	set fileName to item 1 of argv
-	if fileName is "" or fileName contains "/" or fileName contains ":" then return my t("ファイル名に / や : は使えません", "File names cannot contain / or :")
-	tell application "System Events" to set frontApp to name of first process whose frontmost is true
-	if frontApp is "Path Finder" then
-		tell application "Path Finder" to set folderPath to POSIX path of target of front finder window
-	else
-		tell application "Finder"
-			if (count of Finder windows) &gt; 0 then
-				set folderPath to POSIX path of (target of front Finder window as alias)
-			else
-				set folderPath to POSIX path of (path to desktop folder)
-			end if
-		end tell
-	end if
+	set fileName to ((current application's NSString's stringWithString:(item 1 of argv))'s stringByTrimmingCharactersInSet:(current application's NSCharacterSet's whitespaceCharacterSet())) as text
+	set nameIds to id of fileName
+	if fileName is "" or nameIds is 46 or nameIds is {46, 46} or fileName contains "/" or fileName contains ":" or fileName contains (character id 10) or fileName contains (character id 13) then return my t("このファイル名は使えません（/、:、改行、「.」「..」は不可）: ", "Invalid file name (/, :, line breaks, \".\" and \"..\" are not allowed): ") &amp; fileName
+	set folderPath to POSIX path of (path to desktop folder)
+	set pathFinder to "Path Finder"
+	try
+		tell application "System Events" to set frontApp to name of first process whose frontmost is true
+		if frontApp is pathFinder then
+			tell application pathFinder to set folderPath to «property pthP» of «property tarG» of «class fwiD» 1
+		else
+			tell application "Finder" to set folderPath to POSIX path of (target of front Finder window as alias)
+		end if
+	on error errMsg number errNum
+		if errNum is -1743 then return my t("オートメーションの許可が必要です。システム設定 &gt; プライバシーとセキュリティ &gt; オートメーション で Alfred に Finder・Path Finder・System Events の制御を許可してください。", "Automation access is required. Allow Alfred to control Finder, Path Finder and System Events in System Settings &gt; Privacy &amp; Security &gt; Automation.")
+	end try
 	if folderPath does not end with "/" then set folderPath to folderPath &amp; "/"
 	set filePath to folderPath &amp; fileName
 	try
-		do shell script "set -o noclobber; : &gt; " &amp; quoted form of filePath
+		do shell script "test ! -e " &amp; quoted form of filePath &amp; " &amp;&amp; test ! -L " &amp; quoted form of filePath
 	on error
-		return my t("作成できませんでした（同名のファイルがある可能性があります）: ", "Could not create the file (it may already exist): ") &amp; fileName
+		return my t("同名の項目があるため作成しませんでした: ", "Not created because an item with the same name exists: ") &amp; filePath
 	end try
+	try
+		do shell script "set -o noclobber; : &gt; " &amp; quoted form of filePath
+	on error errMsg
+		return my t("作成できませんでした: ", "Could not create the file: ") &amp; filePath &amp; " (" &amp; errMsg &amp; ")"
+	end try
+	if (system attribute "open_after_create") is in {"1", "true"} then
+		try
+			do shell script "open " &amp; quoted form of filePath
+		on error
+			return my t("作成しましたが、開けませんでした: ", "Created, but could not open: ") &amp; filePath
+		end try
+	end if
 	return my t("作成しました: ", "Created: ") &amp; filePath
-end run</string>
+end run
+</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -147,10 +161,10 @@ end run</string>
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>FinderまたはPath Finderで開いているフォルダに空のファイルを作成します。Finderのウインドウがなければデスクトップに作成します。同名のファイルは上書きしません。
-Creates an empty file in the folder open in Finder or Path Finder (the Desktop if no Finder window is open). Existing files are never overwritten.
+	<string>FinderまたはPath Finderで開いているフォルダに空のファイルを作成します。ウインドウがなければデスクトップに作成します。同名の項目があれば作成しません。
+Creates an empty file in the folder open in Finder or Path Finder (the Desktop if no window is open). Existing items are never overwritten.
 
-Usage: nf file-name.txt</string>
+Usage: &lt;keyword&gt; file-name.txt (default keyword: nf)</string>
 	<key>uidata</key>
 	<dict>
 		<key>11C94442-D6E2-4C2E-A62E-1C1D412DBF76</key>
@@ -227,6 +241,23 @@ Usage: nf file-name.txt</string>
 			<string>textfield</string>
 			<key>variable</key>
 			<string>keyword</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<false/>
+				<key>text</key>
+				<string></string>
+			</dict>
+			<key>description</key>
+			<string>作成したファイルを既定のアプリで開きます。 / Open the created file in its default app.</string>
+			<key>label</key>
+			<string>作成後に開く / Open after creating</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>open_after_create</string>
 		</dict>
 	</array>
 	<key>variablesdontexport</key>
