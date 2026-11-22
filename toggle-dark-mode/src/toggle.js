@@ -14,6 +14,6 @@ function run() {
         uid: 'toggle',
         title: dark ? (ja ? 'ライトモードに切り替え' : 'Switch to Light Mode') : (ja ? 'ダークモードに切り替え' : 'Switch to Dark Mode'),
         subtitle: dark ? (ja ? '現在: ダークモード' : 'Current: Dark Mode') : (ja ? '現在: ライトモード' : 'Current: Light Mode'),
-        arg: ''
+        arg: dark ? 'light' : 'dark'
     }]});
 }

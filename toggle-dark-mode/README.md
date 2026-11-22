@@ -1,13 +1,13 @@
 # Toggle Dark Mode
 
-[ダウンロード](https://github.com/31mskz10/alfred-workflows/releases/download/Toggle_Dark_Mode/Toggle.Dark.Mode.alfredworkflow) · [一覧へ戻る](../README.md)
+[English](README.en.md) · [ダウンロード](https://github.com/31mskz10/alfred-workflows/releases/download/Toggle_Dark_Mode/Toggle.Dark.Mode.alfredworkflow) · [一覧へ戻る](../README.md)
 
 macOSのダークモードとライトモードを切り替えます。
 
 ## 必要なもの
 
 - ダークモードを利用できるmacOS
-- Alfred Powerpack
+- Alfred 5以降、Alfred Powerpack
 
 ## 初期設定
 
@@ -15,7 +15,7 @@ macOSのダークモードとライトモードを切り替えます。
 
 ## 使い方
 
-Alfredで `darkmode` を入力すると、現在のモードと切り替え先が表示されます。Enterを押すと、ダークモードとライトモードが切り替わります。引数は不要です。
+Alfredで `darkmode` を入力すると、現在のモードと切り替え先が表示されます。Enterを押すと、表示された切り替え先のモードに切り替わります。引数は不要です。
 
 ## 設定
 

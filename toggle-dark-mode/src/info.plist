@@ -25,7 +25,7 @@
 	<key>createdby</key>
 	<string>31mskz10</string>
 	<key>description</key>
-	<string>Dark Modeを切り替える</string>
+	<string>ダークモードを切り替える / Toggle Dark Mode</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
@@ -37,11 +37,19 @@
 			<dict>
 				<key>applescript</key>
 				<string>on alfred_script(q)
-  tell application "System Events"
-    tell appearance preferences
-      set dark mode to not dark mode
+  try
+    tell application "System Events"
+      tell appearance preferences
+        if q is "dark" or q is "light" then
+          set dark mode to (q is "dark")
+        else
+          set dark mode to not dark mode
+        end if
+      end tell
     end tell
-  end tell
+  on error errMsg
+    display notification errMsg with title "Toggle Dark Mode"
+  end try
 end alfred_script</string>
 				<key>cachescript</key>
 				<false/>
@@ -104,7 +112,10 @@ end alfred_script</string>
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>ダークモードとライトモードを切り替えるWorkflowです</string>
+	<string>macOSのダークモードとライトモードを切り替えます。
+Switches macOS between Dark Mode and Light Mode.
+
+Usage: &lt;keyword&gt; (default keyword: darkmode)</string>
 	<key>uidata</key>
 	<dict>
 		<key>C08DD244-3C0B-452A-90CF-7959122E048D</key>
