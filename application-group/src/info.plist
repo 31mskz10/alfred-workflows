@@ -38,7 +38,7 @@
 				<key>argumenttype</key>
 				<integer>1</integer>
 				<key>keyword</key>
-				<string>a</string>
+				<string>{var:keyword}</string>
 				<key>subtext</key>
 				<string>アプリのグループを一括起動・編集 / Launch or edit app groups</string>
 				<key>text</key>
@@ -75,7 +75,7 @@
 	<string>アプリのグループを作成し、まとめて起動します。グループはAlfred UIの画面で作成・編集します。Alfred 6 Powerpackが必要です。
 Create groups of apps and launch each group at once. Groups are created and edited in an Alfred UI window. Requires Alfred 6 Powerpack.
 
-Usage: a [group name]
+Usage: ag [group name]
 
 Environment Variables:
 language: auto / ja / en (default: auto, macOS preferred language).</string>
@@ -96,11 +96,60 @@ language: auto / ja / en (default: auto, macOS preferred language).</string>
 			<integer>120</integer>
 		</dict>
 	</dict>
-	<key>variables</key>
-	<dict>
-		<key>language</key>
-		<string>auto</string>
-	</dict>
+	<key>userconfigurationconfig</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>auto</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>自動（macOSの言語） / Auto (macOS language)</string>
+						<string>auto</string>
+					</array>
+					<array>
+						<string>日本語</string>
+						<string>ja</string>
+					</array>
+					<array>
+						<string>English</string>
+						<string>en</string>
+					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string>Workflowが表示する文言の言語。 / Language of the text shown by the workflow.</string>
+			<key>label</key>
+			<string>言語 / Language</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>language</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>ag</string>
+				<key>placeholder</key>
+				<string>ag</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Alfredで入力するキーワード。 / The keyword typed in Alfred.</string>
+			<key>label</key>
+			<string>キーワード / Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword</string>
+		</dict>
+	</array>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>
