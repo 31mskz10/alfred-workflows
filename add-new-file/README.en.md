@@ -11,3 +11,12 @@ Create an empty file in the folder open in Finder or Path Finder. Requires macOS
 3. A notification shows the path of the new file.
 
 Without a Finder window, the file is created on the Desktop. An existing file with the same name is never overwritten; a notification tells you instead. File names cannot contain `/` or `:`. Grant automation permissions when prompted.
+
+## Configuration
+
+Select the workflow in Alfred Preferences and open Configure Workflow.
+
+| Setting | Default | Description |
+| --- | --- | --- |
+| Language | Auto | Language of the displayed text. Auto uses Japanese when macOS's first preferred language is Japanese, English otherwise. |
+| Keyword | `nf` | The keyword typed in Alfred. |

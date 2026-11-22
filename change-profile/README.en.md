@@ -10,3 +10,12 @@ Switch Karabiner-Elements profiles from Alfred. Profiles are read from Karabiner
 2. Filter by name and press Return. A notification confirms the switch.
 
 The workflow uses `/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli`, which a standard Karabiner-Elements installation provides.
+
+## Configuration
+
+Select the workflow in Alfred Preferences and open Configure Workflow.
+
+| Setting | Default | Description |
+| --- | --- | --- |
+| Language | Auto | Language of the displayed text. Auto uses Japanese when macOS's first preferred language is Japanese, English otherwise. |
+| Keyword | `ke` | The keyword typed in Alfred. |

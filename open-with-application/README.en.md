@@ -8,14 +8,15 @@ Open files and folders selected in Finder or Path Finder with an application. Re
 
 Import the downloaded `.alfredworkflow`. Grant automation permissions when prompted. Applications are discovered automatically; configure the optional Hotkey in the workflow editor.
 
-## Environment Variables
+## Configuration
 
-Open Environment Variables in Alfred's workflow editor. Changes apply the next time you open the picker.
+Select the workflow in Alfred Preferences and open Configure Workflow.
 
-| Variable | Default | Values |
+| Setting | Default | Description |
 | --- | --- | --- |
-| `language` | `auto` | `ja`: Japanese, `en`: English, `auto`: Japanese when macOS's first preferred language is Japanese; English otherwise. |
-| `history_limit` | `50` | Number of recent selections to retain: an integer from 1 to 1000. Invalid values fall back to 50. |
+| Language | Auto | Language of the displayed text. Auto uses Japanese when macOS's first preferred language is Japanese, English otherwise. |
+| Keyword | `o` | The keyword typed in Alfred. |
+| History size | `50` | Number of recent selections to retain: an integer from 1 to 1000. Invalid values fall back to 50. |
 
 Reducing the limit discards older entries on the next confirmed selection. Increasing it does not restore discarded entries.
 

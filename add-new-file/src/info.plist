@@ -51,7 +51,7 @@
 				<key>argumenttype</key>
 				<integer>0</integer>
 				<key>keyword</key>
-				<string>nf</string>
+				<string>{var:keyword}</string>
 				<key>subtext</key>
 				<string>開いているフォルダに新規ファイルを作成 / Create a new file in the open folder</string>
 				<key>text</key>
@@ -74,9 +74,21 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>on run argv
+				<string>use framework "Foundation"
+use scripting additions
+
+on t(ja, en)
+	set lang to system attribute "language"
+	if lang is "ja" then return ja
+	if lang is "en" then return en
+	set preferred to (current application's NSLocale's preferredLanguages()'s firstObject()) as text
+	if preferred is "ja" or preferred starts with "ja-" then return ja
+	return en
+end t
+
+on run argv
 	set fileName to item 1 of argv
-	if fileName is "" or fileName contains "/" or fileName contains ":" then return "ファイル名に / や : は使えません / File names cannot contain / or :"
+	if fileName is "" or fileName contains "/" or fileName contains ":" then return my t("ファイル名に / や : は使えません", "File names cannot contain / or :")
 	tell application "System Events" to set frontApp to name of first process whose frontmost is true
 	if frontApp is "Path Finder" then
 		tell application "Path Finder" to set folderPath to POSIX path of target of front finder window
@@ -94,9 +106,9 @@
 	try
 		do shell script "set -o noclobber; : &gt; " &amp; quoted form of filePath
 	on error
-		return "作成できませんでした（同名のファイルがある可能性があります） / Could not create the file (it may already exist): " &amp; fileName
+		return my t("作成できませんでした（同名のファイルがある可能性があります）: ", "Could not create the file (it may already exist): ") &amp; fileName
 	end try
-	return "作成しました / Created: " &amp; filePath
+	return my t("作成しました: ", "Created: ") &amp; filePath
 end run</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
@@ -163,6 +175,60 @@ Usage: nf file-name.txt</string>
 			<integer>120</integer>
 		</dict>
 	</dict>
+	<key>userconfigurationconfig</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>auto</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>自動（macOSの言語） / Auto (macOS language)</string>
+						<string>auto</string>
+					</array>
+					<array>
+						<string>日本語</string>
+						<string>ja</string>
+					</array>
+					<array>
+						<string>English</string>
+						<string>en</string>
+					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string>Workflowが表示する文言の言語。 / Language of the text shown by the workflow.</string>
+			<key>label</key>
+			<string>言語 / Language</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>language</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>nf</string>
+				<key>placeholder</key>
+				<string>nf</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Alfredで入力するキーワード。 / The keyword typed in Alfred.</string>
+			<key>label</key>
+			<string>キーワード / Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword</string>
+		</dict>
+	</array>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>

@@ -15,7 +15,7 @@ macOSでのファイル操作、アプリの起動、設定の切り替えを行
 | [Add New File](add-new-file/README.md) | FinderやPath Finderで選択中のフォルダに新規ファイルを作成する。 |
 | [Change Profile](change-profile/README.md) | Karabiner-ElementsのProfileを切り替える。 |
 | [Execute ImageOptim](execute-image-optim/README.md) | 選択中の画像、または開いているフォルダの画像をImageOptimで圧縮する。 |
-| [Application Group](application-group/README.md) | 画面で作成したアプリのグループを一括起動する（Alfred 6）。 |
+| [Application Group](application-group/README.md) | 画面で作成したアプリのグループを一括起動し、ウインドウ配置も再現する（Alfred 6）。 |
 
 ## インストール
 

@@ -56,23 +56,51 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
 				<key>argumenttype</key>
 				<integer>2</integer>
+				<key>escaping</key>
+				<integer>102</integer>
 				<key>keyword</key>
-				<string>darkmode</string>
+				<string>{var:keyword}</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>./toggle.js</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
 				<key>subtext</key>
-				<string>ダークモードを切り替える</string>
-				<key>text</key>
+				<string>ダークモードを切り替える / Toggle Dark Mode</string>
+				<key>title</key>
 				<string>Toggle Dark Mode</string>
+				<key>type</key>
+				<integer>5</integer>
 				<key>withspace</key>
 				<false/>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
+			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
 			<string>C08DD244-3C0B-452A-90CF-7959122E048D</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>3</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -94,6 +122,60 @@ end alfred_script</string>
 			<integer>125</integer>
 		</dict>
 	</dict>
+	<key>userconfigurationconfig</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>auto</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>自動（macOSの言語） / Auto (macOS language)</string>
+						<string>auto</string>
+					</array>
+					<array>
+						<string>日本語</string>
+						<string>ja</string>
+					</array>
+					<array>
+						<string>English</string>
+						<string>en</string>
+					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string>Workflowが表示する文言の言語。 / Language of the text shown by the workflow.</string>
+			<key>label</key>
+			<string>言語 / Language</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>language</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>darkmode</string>
+				<key>placeholder</key>
+				<string>darkmode</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Alfredで入力するキーワード。 / The keyword typed in Alfred.</string>
+			<key>label</key>
+			<string>キーワード / Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword</string>
+		</dict>
+	</array>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>

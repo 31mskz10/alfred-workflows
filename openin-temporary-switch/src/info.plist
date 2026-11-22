@@ -59,7 +59,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>oi</string>
+				<string>{var:keyword}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -168,6 +168,57 @@ Usage: oi [minutes] [rule name]</string>
 	</dict>
 	<key>userconfigurationconfig</key>
 	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>auto</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>自動（macOSの言語） / Auto (macOS language)</string>
+						<string>auto</string>
+					</array>
+					<array>
+						<string>日本語</string>
+						<string>ja</string>
+					</array>
+					<array>
+						<string>English</string>
+						<string>en</string>
+					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string>Workflowが表示する文言の言語。 / Language of the text shown by the workflow.</string>
+			<key>label</key>
+			<string>言語 / Language</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>language</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>oi</string>
+				<key>placeholder</key>
+				<string>oi</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Alfredで入力するキーワード。 / The keyword typed in Alfred.</string>
+			<key>label</key>
+			<string>キーワード / Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword</string>
+		</dict>
 		<dict>
 			<key>config</key>
 			<dict>

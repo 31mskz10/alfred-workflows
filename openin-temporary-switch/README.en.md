@@ -12,6 +12,8 @@ Temporarily switch OpenIn rules from Alfred and switch back to the default rule 
 
 | Setting | Default | Description |
 | --- | --- | --- |
+| Language | Auto | Language of the displayed text. Auto uses Japanese when macOS's first preferred language is Japanese, English otherwise. |
+| Keyword | `oi` | The keyword typed in Alfred. |
 | Default rule name | `Default` | The rule enabled when switching back. Must match the OpenIn rule name exactly. |
 | Mode prefix | `[Mode]` | Rules whose names start with this text are listed. |
 | Default minutes | `10` | Minutes until switching back when no number is typed. |

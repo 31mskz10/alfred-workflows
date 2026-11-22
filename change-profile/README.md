@@ -17,3 +17,12 @@ Karabiner-ElementsのプロファイルをAlfredから切り替えます。プ�
 コマンドは `/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli` を使用します。Karabiner-Elementsを標準の方法でインストールしていれば、この場所にあります。
 
 1.0.0からの変更点: プロファイル名を設定する必要がなくなりました。切り替え後にiTermの表示・非表示を切り替える処理と、Terminal Commandによる実行は削除しました。
+
+## 設定
+
+Alfred Preferencesでワークフローを選び、Configure Workflowで変更します。
+
+| 設定 | 初期値 | 内容 |
+| --- | --- | --- |
+| 言語 | 自動 | 表示する文言の言語。自動はmacOSの最優先言語が日本語なら日本語、それ以外は英語。 |
+| キーワード | `ke` | Alfredで入力するキーワード。 |

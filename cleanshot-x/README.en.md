@@ -13,3 +13,12 @@ Search and run CleanShot X capture, recording and annotation actions from Alfred
 Capture actions also have variants that copy, save, annotate, upload or pin the capture afterwards. Choosing `Upload` runs CleanShot X's upload.
 
 Available actions depend on the CleanShot X version you have installed.
+
+## Configuration
+
+Select the workflow in Alfred Preferences and open Configure Workflow.
+
+| Setting | Default | Description |
+| --- | --- | --- |
+| Language | Auto | Language of the displayed text. Auto uses Japanese when macOS's first preferred language is Japanese, English otherwise. |
+| Keyword | `cs` | The keyword typed in Alfred. |

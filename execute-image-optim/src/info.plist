@@ -49,7 +49,7 @@
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>io</string>
+				<string>{var:keyword}</string>
 				<key>subtext</key>
 				<string>選択中の項目か開いているフォルダをImageOptimで圧縮 / Optimize selected items or the open folder</string>
 				<key>text</key>
@@ -72,7 +72,19 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>on run argv
+				<string>use framework "Foundation"
+use scripting additions
+
+on t(ja, en)
+	set lang to system attribute "language"
+	if lang is "ja" then return ja
+	if lang is "en" then return en
+	set preferred to (current application's NSLocale's preferredLanguages()'s firstObject()) as text
+	if preferred is "ja" or preferred starts with "ja-" then return ja
+	return en
+end t
+
+on run argv
 	tell application "System Events" to set frontApp to name of first process whose frontmost is true
 	set targets to {}
 	if frontApp is "Path Finder" then
@@ -96,11 +108,11 @@
 			if targets is {} and (count of Finder windows) &gt; 0 then set end of targets to POSIX path of (target of front Finder window as alias)
 		end tell
 	end if
-	if targets is {} then return "FinderまたはPath Finderで画像を選択するか、フォルダを開いてください / Select images or open a folder in Finder or Path Finder"
+	if targets is {} then return my t("FinderまたはPath Finderで画像を選択するか、フォルダを開いてください", "Select images or open a folder in Finder or Path Finder")
 	try
 		do shell script "open -Ra ImageOptim"
 	on error
-		return "ImageOptimが見つかりません / ImageOptim not found"
+		return my t("ImageOptimが見つかりません", "ImageOptim not found")
 	end try
 	set command to "open -a ImageOptim"
 	repeat with targetPath in targets
@@ -173,6 +185,60 @@ Usage: io</string>
 			<integer>120</integer>
 		</dict>
 	</dict>
+	<key>userconfigurationconfig</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>auto</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>自動（macOSの言語） / Auto (macOS language)</string>
+						<string>auto</string>
+					</array>
+					<array>
+						<string>日本語</string>
+						<string>ja</string>
+					</array>
+					<array>
+						<string>English</string>
+						<string>en</string>
+					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string>Workflowが表示する文言の言語。 / Language of the text shown by the workflow.</string>
+			<key>label</key>
+			<string>言語 / Language</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>language</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>io</string>
+				<key>placeholder</key>
+				<string>io</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Alfredで入力するキーワード。 / The keyword typed in Alfred.</string>
+			<key>label</key>
+			<string>キーワード / Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword</string>
+		</dict>
+	</array>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>

@@ -260,7 +260,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>o</string>
+				<string>{var:keyword}</string>
 				<key>queuedelaycustom</key>
 				<integer>0</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -726,14 +726,80 @@ Type o followed by a space to open the app picker. Requires Alfred 6 Powerpack.<
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
-	<array/>
-	<key>variables</key>
-	<dict>
-		<key>history_limit</key>
-		<string>50</string>
-		<key>language</key>
-		<string>auto</string>
-	</dict>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>auto</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>自動（macOSの言語） / Auto (macOS language)</string>
+						<string>auto</string>
+					</array>
+					<array>
+						<string>日本語</string>
+						<string>ja</string>
+					</array>
+					<array>
+						<string>English</string>
+						<string>en</string>
+					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string>Workflowが表示する文言の言語。 / Language of the text shown by the workflow.</string>
+			<key>label</key>
+			<string>言語 / Language</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>language</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>o</string>
+				<key>placeholder</key>
+				<string>o</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Alfredで入力するキーワード。 / The keyword typed in Alfred.</string>
+			<key>label</key>
+			<string>キーワード / Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>50</string>
+				<key>placeholder</key>
+				<string>50</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>最近使ったアプリとして記録する件数。 / Number of recently used apps to remember.</string>
+			<key>label</key>
+			<string>履歴の件数 / History size</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>history_limit</string>
+		</dict>
+	</array>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>

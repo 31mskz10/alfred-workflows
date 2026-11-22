@@ -2,6 +2,18 @@
 ObjC.import('Foundation');
 
 const CLI = '/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli';
+const TEXT = {
+    notFound: ['Karabiner-Elementsが見つかりません', 'Karabiner-Elements not found'],
+    current: ['現在のプロファイル', 'Current profile'],
+    switchTo: ['このプロファイルに切り替える', 'Switch to this profile']
+};
+
+function t(key) {
+    const language = ObjC.unwrap($.NSProcessInfo.processInfo.environment.objectForKey('language')) || 'auto';
+    const ja = language === 'ja' || (language !== 'en' &&
+        /^ja(?:-|$)/.test(ObjC.deepUnwrap($.NSLocale.preferredLanguages)[0] || 'en'));
+    return TEXT[key][ja ? 0 : 1];
+}
 
 function quote(value) {
     return "'" + value.replace(/'/g, "'\\''") + "'";
@@ -16,7 +28,7 @@ function cli(option) {
 function run() {
     if (!$.NSFileManager.defaultManager.isExecutableFileAtPath(CLI)) {
         return JSON.stringify({items: [{
-            title: 'Karabiner-Elementsが見つかりません / Karabiner-Elements not found',
+            title: t('notFound'),
             subtitle: CLI,
             valid: false
         }]});
@@ -26,9 +38,7 @@ function run() {
     return JSON.stringify({items: names.map(name => ({
         uid: name,
         title: name,
-        subtitle: name === current
-            ? '現在のプロファイル / Current profile'
-            : 'このプロファイルに切り替える / Switch to this profile',
+        subtitle: t(name === current ? 'current' : 'switchTo'),
         arg: name,
         match: name,
         valid: name !== current

@@ -20,7 +20,6 @@ const TEXT = {
     reverted: ['「%s」に戻しました', 'Switched back to "%s"']
 };
 
-const JAPANESE = /^ja(?:-|$)/.test(ObjC.deepUnwrap($.NSLocale.preferredLanguages)[0] || 'en');
 const app = Application.currentApplication();
 app.includeStandardAdditions = true;
 
@@ -48,6 +47,9 @@ function literal(value) {
     return "'" + value.replace(/'/g, "''") + "'";
 }
 
+const LANGUAGE = env('language', 'auto');
+const JAPANESE = LANGUAGE === 'ja' || (LANGUAGE !== 'en' &&
+    /^ja(?:-|$)/.test(ObjC.deepUnwrap($.NSLocale.preferredLanguages)[0] || 'en'));
 const DEFAULT_RULE = env('DEFAULT_RULE_NAME', 'Default');
 const PREFIX = env('MODE_PREFIX', '[Mode]');
 const AUTO_REVERT = /^(true|1|yes)$/i.test(env('AUTO_REVERT', 'true'));
