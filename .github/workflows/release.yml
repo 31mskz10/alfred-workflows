@@ -29,13 +29,13 @@ jobs:
 
             title="${prefix//_/ } v${version}"
             asset="$RUNNER_TEMP/${prefix//_/.}.alfredworkflow"
-            (cd "$dir/src" && zip -r -X -q "$asset" . -x '.DS_Store' 'prefs.plist')
+            (cd "$dir/src" && zip -r -X -q "$asset" . -x '*.DS_Store' '*prefs.plist')
 
-            gh release create "$tag" "$asset" --title "$title" --notes "" --target "$GITHUB_SHA"
             if gh release view "$prefix" >/dev/null 2>&1; then
               gh release upload "$prefix" "$asset" --clobber
               gh release edit "$prefix" --title "$title"
             else
               gh release create "$prefix" "$asset" --title "$title" --notes "" --target "$GITHUB_SHA"
             fi
+            gh release create "$tag" "$asset" --title "$title" --notes "" --target "$GITHUB_SHA"
           done
