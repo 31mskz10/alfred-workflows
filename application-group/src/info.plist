@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.31mskz10.LaunchApplications</string>
+	<key>category</key>
+	<string>MyWorkflow</string>
+	<key>connections</key>
+	<dict>
+		<key>0D2A18C3-5092-4B0D-A8E2-E0DA4C4FF612</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C4EB570F-88D1-4D58-BF86-E241B513F873</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>31mskz10</string>
+	<key>description</key>
+	<string>登録したアプリのグループを一括起動する / Launch groups of apps at once</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Application Group</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>keyword</key>
+				<string>a</string>
+				<key>subtext</key>
+				<string>アプリのグループを一括起動・編集 / Launch or edit app groups</string>
+				<key>text</key>
+				<string>Application Group</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>0D2A18C3-5092-4B0D-A8E2-E0DA4C4FF612</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>launchmode</key>
+				<integer>0</integer>
+				<key>path</key>
+				<string>groups.alfredui</string>
+				<key>stackview</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.userinterface.alfredui</string>
+			<key>uid</key>
+			<string>C4EB570F-88D1-4D58-BF86-E241B513F873</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>アプリのグループを作成し、まとめて起動します。グループはAlfred UIの画面で作成・編集します。Alfred 6 Powerpackが必要です。
+Create groups of apps and launch each group at once. Groups are created and edited in an Alfred UI window. Requires Alfred 6 Powerpack.
+
+Usage: a [group name]
+
+Environment Variables:
+language: auto / ja / en (default: auto, macOS preferred language).</string>
+	<key>uidata</key>
+	<dict>
+		<key>0D2A18C3-5092-4B0D-A8E2-E0DA4C4FF612</key>
+		<dict>
+			<key>xpos</key>
+			<integer>60</integer>
+			<key>ypos</key>
+			<integer>120</integer>
+		</dict>
+		<key>C4EB570F-88D1-4D58-BF86-E241B513F873</key>
+		<dict>
+			<key>xpos</key>
+			<integer>260</integer>
+			<key>ypos</key>
+			<integer>120</integer>
+		</dict>
+	</dict>
+	<key>variables</key>
+	<dict>
+		<key>language</key>
+		<string>auto</string>
+	</dict>
+	<key>variablesdontexport</key>
+	<array/>
+	<key>version</key>
+	<string>2.0.0</string>
+	<key>webaddress</key>
+	<string>https://webrandum.net</string>
+</dict>
+</plist>

@@ -10,7 +10,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>6EB4E3E5-5AEE-467F-A955-2128BEDC55C8</string>
+				<string>8FCB32BD-2C70-4EEB-BAE3-034B10ABA0EE</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -19,11 +19,11 @@
 				<false/>
 			</dict>
 		</array>
-		<key>6EB4E3E5-5AEE-467F-A955-2128BEDC55C8</key>
+		<key>8FCB32BD-2C70-4EEB-BAE3-034B10ABA0EE</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>DCF28BA5-F9FF-4E07-80ED-5DF684A7D5D3</string>
+				<string>00418A37-14BE-41DD-B112-2343D801C2E8</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -36,7 +36,7 @@
 	<key>createdby</key>
 	<string>31mskz10</string>
 	<key>description</key>
-	<string>現在開いているフォルダ内の画像をImageOptimで開く</string>
+	<string>選択中の画像をImageOptimで圧縮する / Optimize images with ImageOptim</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
@@ -46,57 +46,12 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>escaping</key>
-				<integer>1</integer>
-				<key>script</key>
-				<string>open -a ImageOptim.app {query}/*</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.terminalcommand</string>
-			<key>uid</key>
-			<string>DCF28BA5-F9FF-4E07-80ED-5DF684A7D5D3</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-  tell application "System Events"
-    set appName to name of the first process whose frontmost is true
-  end tell
-  if appName is "Finder" then
-    tell application "Finder"
-      set pathList to POSIX path of (folder of the front window as alias)
-      return pathList
-    end tell
-  else
-    tell application "Path Finder"
-      set pathList to POSIX path of the target of the front finder window
-      return pathList
-    end tell
-  end if
-end alfred_script</string>
-				<key>cachescript</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
-			<key>uid</key>
-			<string>6EB4E3E5-5AEE-467F-A955-2128BEDC55C8</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
 				<string>io</string>
 				<key>subtext</key>
-				<string>現在開いているフォルダをImageOptimで開く</string>
+				<string>選択中の項目か開いているフォルダをImageOptimで圧縮 / Optimize selected items or the open folder</string>
 				<key>text</key>
 				<string>Execute ImageOptim</string>
 				<key>withspace</key>
@@ -109,37 +64,119 @@ end alfred_script</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>on run argv
+	tell application "System Events" to set frontApp to name of first process whose frontmost is true
+	set targets to {}
+	if frontApp is "Path Finder" then
+		tell application "Path Finder"
+			try
+				repeat with anItem in (get selection)
+					set end of targets to POSIX path of anItem
+				end repeat
+			end try
+			if targets is {} then
+				try
+					set end of targets to POSIX path of target of front finder window
+				end try
+			end if
+		end tell
+	else if frontApp is "Finder" then
+		tell application "Finder"
+			repeat with anItem in (get selection)
+				set end of targets to POSIX path of (anItem as alias)
+			end repeat
+			if targets is {} and (count of Finder windows) &gt; 0 then set end of targets to POSIX path of (target of front Finder window as alias)
+		end tell
+	end if
+	if targets is {} then return "FinderまたはPath Finderで画像を選択するか、フォルダを開いてください / Select images or open a folder in Finder or Path Finder"
+	try
+		do shell script "open -Ra ImageOptim"
+	on error
+		return "ImageOptimが見つかりません / ImageOptim not found"
+	end try
+	set command to "open -a ImageOptim"
+	repeat with targetPath in targets
+		set command to command &amp; " " &amp; quoted form of targetPath
+	end repeat
+	do shell script command
+end run</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>6</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>8FCB32BD-2C70-4EEB-BAE3-034B10ABA0EE</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Execute ImageOptim</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>00418A37-14BE-41DD-B112-2343D801C2E8</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
-	<string>現在開いているフォルダ内の画像をImageOptimで開いて圧縮します</string>
+	<string>FinderまたはPath Finderで選択中の項目をImageOptimに渡します。選択がなければ開いているフォルダを渡します。
+Sends the items selected in Finder or Path Finder to ImageOptim, or the open folder if nothing is selected.
+
+Usage: io</string>
 	<key>uidata</key>
 	<dict>
+		<key>00418A37-14BE-41DD-B112-2343D801C2E8</key>
+		<dict>
+			<key>xpos</key>
+			<integer>460</integer>
+			<key>ypos</key>
+			<integer>120</integer>
+		</dict>
 		<key>68451C64-6A9C-425B-8985-B19A0AC343A6</key>
 		<dict>
 			<key>xpos</key>
-			<integer>100</integer>
+			<integer>60</integer>
 			<key>ypos</key>
-			<integer>115</integer>
+			<integer>120</integer>
 		</dict>
-		<key>6EB4E3E5-5AEE-467F-A955-2128BEDC55C8</key>
+		<key>8FCB32BD-2C70-4EEB-BAE3-034B10ABA0EE</key>
 		<dict>
 			<key>xpos</key>
-			<integer>270</integer>
+			<integer>260</integer>
 			<key>ypos</key>
-			<integer>115</integer>
-		</dict>
-		<key>DCF28BA5-F9FF-4E07-80ED-5DF684A7D5D3</key>
-		<dict>
-			<key>xpos</key>
-			<integer>440</integer>
-			<key>ypos</key>
-			<integer>115</integer>
+			<integer>120</integer>
 		</dict>
 	</dict>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>
-	<string>1.0.0</string>
+	<string>2.0.0</string>
 	<key>webaddress</key>
 	<string>https://webrandum.net</string>
 </dict>

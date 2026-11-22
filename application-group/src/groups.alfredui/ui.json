@@ -1,0 +1,611 @@
+{
+  "bundleid": "com.31mskz10.LaunchApplications.ui",
+  "log": {
+    "internal": true,
+    "level": "all"
+  },
+  "variablesconfig": {
+    "language": {
+      "src": "variable",
+      "default": "auto",
+      "scriptenv": true
+    },
+    "query": {
+      "src": "args[0]",
+      "default": ""
+    },
+    "groups": {
+      "default": "[]",
+      "persist": true,
+      "scriptenv": true
+    }
+  },
+  "window": {
+    "title": "Application Group",
+    "size": {
+      "width": 560,
+      "height": 480
+    },
+    "padding": 16,
+    "blur": true,
+    "root": {
+      "type": "view",
+      "layout": "border",
+      "spacing": 12,
+      "events": [
+        {
+          "triggers": "preload",
+          "action": {
+            "type": "script",
+            "src": "groups.js",
+            "args": [
+              "load"
+            ]
+          }
+        }
+      ],
+      "shortcuts": [
+        {
+          "shortcut": "↑",
+          "action": {
+            "type": "function",
+            "src": "groups",
+            "args": "selectup"
+          }
+        },
+        {
+          "shortcut": "↓",
+          "action": {
+            "type": "function",
+            "src": "groups",
+            "args": "selectdown"
+          }
+        }
+      ],
+      "components": [
+        {
+          "type": "textfield",
+          "id": "search",
+          "constraints": {
+            "region": "top"
+          },
+          "focus": true,
+          "text": "{var:query}",
+          "placeholder": "Search / 検索",
+          "font": {
+            "size": 16
+          },
+          "textinsets": {
+            "horizontal": 4,
+            "vertical": 4
+          },
+          "events": [
+            {
+              "triggers": "changed",
+              "action": {
+                "type": "function",
+                "src": "groups",
+                "args": "filterdata"
+              }
+            },
+            {
+              "triggers": "actioned",
+              "action": {
+                "type": "script",
+                "src": "groups.js",
+                "args": [
+                  "launch",
+                  "{value:groups.selected.groupId.text}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "dataview",
+          "id": "groups",
+          "constraints": {
+            "region": "centre"
+          },
+          "cols": 1,
+          "spacing": 4,
+          "padding": 4,
+          "placeholder": "",
+          "data": {
+            "src": []
+          },
+          "events": [
+            {
+              "triggers": "doubleclicked",
+              "action": {
+                "type": "script",
+                "src": "groups.js",
+                "args": [
+                  "launch",
+                  "{value:groups.selected.groupId.text}"
+                ]
+              }
+            }
+          ],
+          "cell": {
+            "height": 56,
+            "init": {
+              "groupCell.background": null,
+              "groupName.colour": "labelColor",
+              "groupApps.colour": "secondaryLabelColor"
+            },
+            "selected": {
+              "groupCell.background": "alfredSelectedResultBackgroundColor",
+              "groupName.colour": "alfredSelectedResultTextColor",
+              "groupApps.colour": "alfredSelectedResultTextColor"
+            },
+            "root": {
+              "type": "view",
+              "id": "groupCell",
+              "layout": "border",
+              "spacing": 10,
+              "padding": 8,
+              "cornerradius": 8,
+              "components": [
+                {
+                  "type": "label",
+                  "id": "groupId",
+                  "hidden": true
+                },
+                {
+                  "type": "imageview",
+                  "id": "groupIcon",
+                  "constraints": {
+                    "region": "left",
+                    "size": 32
+                  }
+                },
+                {
+                  "type": "view",
+                  "layout": "inline",
+                  "direction": "vertical",
+                  "spacing": 2,
+                  "constraints": {
+                    "region": "centre"
+                  },
+                  "components": [
+                    {
+                      "type": "label",
+                      "text": "",
+                      "font": {
+                        "size": 14,
+                        "weight": "medium"
+                      },
+                      "id": "groupName",
+                      "linebreak": "truncatetail"
+                    },
+                    {
+                      "type": "label",
+                      "text": "",
+                      "font": {
+                        "size": 12
+                      },
+                      "id": "groupApps",
+                      "linebreak": "truncatetail"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "view",
+          "layout": "inline",
+          "direction": "vertical",
+          "spacing": 8,
+          "constraints": {
+            "region": "bottom"
+          },
+          "components": [
+            {
+              "type": "label",
+              "text": "",
+              "font": {
+                "size": 12
+              },
+              "id": "status",
+              "colour": "secondaryLabelColor",
+              "linebreak": "truncatemiddle"
+            },
+            {
+              "type": "view",
+              "layout": "inline",
+              "direction": "horizontal",
+              "spacing": 8,
+              "components": [
+                {
+                  "type": "button",
+                  "id": "newButton",
+                  "text": "",
+                  "events": [
+                    {
+                      "triggers": "actioned",
+                      "action": {
+                        "type": "json",
+                        "src": {
+                          "sheet": {
+                            "id": "edit",
+                            "closeonescape": true,
+                            "root": {
+                              "type": "view",
+                              "layout": "form",
+                              "padding": 24,
+                              "spacing": 12,
+                              "constraints": {
+                                "size": {
+                                  "width": 360
+                                }
+                              },
+                              "components": [
+                                {
+                                  "type": "label",
+                                  "text": "{var:l_name}",
+                                  "font": {
+                                    "size": 14,
+                                    "weight": "medium"
+                                  }
+                                },
+                                {
+                                  "type": "textfield",
+                                  "id": "newName",
+                                  "focus": true,
+                                  "placeholder": "{var:l_untitled}",
+                                  "accessibility": {
+                                    "label": "{var:l_name}"
+                                  },
+                                  "events": [
+                                    {
+                                      "triggers": "actioned",
+                                      "action": {
+                                        "type": "json",
+                                        "src": {
+                                          "opendialog": {
+                                            "canchoosefiles": true,
+                                            "canchoosefolders": false,
+                                            "multiselect": true,
+                                            "filetypes": [
+                                              "com.apple.application-bundle"
+                                            ],
+                                            "folder": "/Applications",
+                                            "message": "{var:l_pick}",
+                                            "setvariable": "picked",
+                                            "action": {
+                                              "type": "script",
+                                              "src": "groups.js",
+                                              "args": [
+                                                "create",
+                                                "{value:newName.text}",
+                                                "{var:picked}"
+                                              ],
+                                              "flattenarrayargs": true
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "view",
+                                  "layout": "inline",
+                                  "direction": "horizontal",
+                                  "spacing": 8,
+                                  "components": [
+                                    {
+                                      "type": "button",
+                                      "id": "cancelButton",
+                                      "text": "{var:l_cancel}",
+                                      "events": [
+                                        {
+                                          "triggers": "actioned",
+                                          "action": {
+                                            "type": "json",
+                                            "src": {
+                                              "sheet": {
+                                                "close": "edit"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "button",
+                                      "id": "createButton",
+                                      "text": "{var:l_create}",
+                                      "events": [
+                                        {
+                                          "triggers": "actioned",
+                                          "action": {
+                                            "type": "json",
+                                            "src": {
+                                              "opendialog": {
+                                                "canchoosefiles": true,
+                                                "canchoosefolders": false,
+                                                "multiselect": true,
+                                                "filetypes": [
+                                                  "com.apple.application-bundle"
+                                                ],
+                                                "folder": "/Applications",
+                                                "message": "{var:l_pick}",
+                                                "setvariable": "picked",
+                                                "action": {
+                                                  "type": "script",
+                                                  "src": "groups.js",
+                                                  "args": [
+                                                    "create",
+                                                    "{value:newName.text}",
+                                                    "{var:picked}"
+                                                  ],
+                                                  "flattenarrayargs": true
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "shortcut": "⌘N"
+                },
+                {
+                  "type": "button",
+                  "id": "appsButton",
+                  "text": "",
+                  "events": [
+                    {
+                      "triggers": "actioned",
+                      "action": {
+                        "type": "json",
+                        "src": {
+                          "opendialog": {
+                            "canchoosefiles": true,
+                            "canchoosefolders": false,
+                            "multiselect": true,
+                            "filetypes": [
+                              "com.apple.application-bundle"
+                            ],
+                            "folder": "/Applications",
+                            "message": "{var:l_pick}",
+                            "setvariable": "picked",
+                            "action": {
+                              "type": "script",
+                              "src": "groups.js",
+                              "args": [
+                                "apps",
+                                "{value:groups.selected.groupId.text}",
+                                "{var:picked}"
+                              ],
+                              "flattenarrayargs": true
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "shortcut": "⌘E"
+                },
+                {
+                  "type": "button",
+                  "id": "renameButton",
+                  "text": "",
+                  "events": [
+                    {
+                      "triggers": "actioned",
+                      "action": {
+                        "type": "json",
+                        "src": {
+                          "sheet": {
+                            "id": "edit",
+                            "closeonescape": true,
+                            "root": {
+                              "type": "view",
+                              "layout": "form",
+                              "padding": 24,
+                              "spacing": 12,
+                              "constraints": {
+                                "size": {
+                                  "width": 360
+                                }
+                              },
+                              "components": [
+                                {
+                                  "type": "label",
+                                  "text": "{var:l_name}",
+                                  "font": {
+                                    "size": 14,
+                                    "weight": "medium"
+                                  }
+                                },
+                                {
+                                  "type": "textfield",
+                                  "id": "renameField",
+                                  "focus": true,
+                                  "text": "{value:groups.selected.groupName.text}",
+                                  "accessibility": {
+                                    "label": "{var:l_name}"
+                                  },
+                                  "events": [
+                                    {
+                                      "triggers": "actioned",
+                                      "action": {
+                                        "type": "script",
+                                        "src": "groups.js",
+                                        "args": [
+                                          "rename",
+                                          "{value:groups.selected.groupId.text}",
+                                          "{value:renameField.text}"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "view",
+                                  "layout": "inline",
+                                  "direction": "horizontal",
+                                  "spacing": 8,
+                                  "components": [
+                                    {
+                                      "type": "button",
+                                      "id": "cancelButton",
+                                      "text": "{var:l_cancel}",
+                                      "events": [
+                                        {
+                                          "triggers": "actioned",
+                                          "action": {
+                                            "type": "json",
+                                            "src": {
+                                              "sheet": {
+                                                "close": "edit"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "button",
+                                      "id": "saveButton",
+                                      "text": "{var:l_save}",
+                                      "events": [
+                                        {
+                                          "triggers": "actioned",
+                                          "action": {
+                                            "type": "script",
+                                            "src": "groups.js",
+                                            "args": [
+                                              "rename",
+                                              "{value:groups.selected.groupId.text}",
+                                              "{value:renameField.text}"
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "shortcut": "⌘R"
+                },
+                {
+                  "type": "button",
+                  "id": "deleteButton",
+                  "text": "",
+                  "events": [
+                    {
+                      "triggers": "actioned",
+                      "action": {
+                        "type": "json",
+                        "src": {
+                          "sheet": {
+                            "id": "edit",
+                            "closeonescape": true,
+                            "root": {
+                              "type": "view",
+                              "layout": "form",
+                              "padding": 24,
+                              "spacing": 12,
+                              "constraints": {
+                                "size": {
+                                  "width": 360
+                                }
+                              },
+                              "components": [
+                                {
+                                  "type": "label",
+                                  "text": "{var:l_confirm}",
+                                  "font": {
+                                    "size": 14,
+                                    "weight": "medium"
+                                  }
+                                },
+                                {
+                                  "type": "label",
+                                  "text": "{value:groups.selected.groupName.text}",
+                                  "font": {
+                                    "size": 14
+                                  },
+                                  "colour": "secondaryLabelColor"
+                                },
+                                {
+                                  "type": "view",
+                                  "layout": "inline",
+                                  "direction": "horizontal",
+                                  "spacing": 8,
+                                  "components": [
+                                    {
+                                      "type": "button",
+                                      "id": "cancelButton",
+                                      "text": "{var:l_cancel}",
+                                      "events": [
+                                        {
+                                          "triggers": "actioned",
+                                          "action": {
+                                            "type": "json",
+                                            "src": {
+                                              "sheet": {
+                                                "close": "edit"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "button",
+                                      "id": "confirmDeleteButton",
+                                      "text": "{var:l_delete}",
+                                      "events": [
+                                        {
+                                          "triggers": "actioned",
+                                          "action": {
+                                            "type": "script",
+                                            "src": "groups.js",
+                                            "args": [
+                                              "delete",
+                                              "{value:groups.selected.groupId.text}"
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "shortcut": "⌘D"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

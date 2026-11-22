@@ -8,11 +8,11 @@
 	<string>MyWorkflow</string>
 	<key>connections</key>
 	<dict>
-		<key>3A114F76-CE3C-4D4D-BF78-2782642DA9E9</key>
+		<key>11C94442-D6E2-4C2E-A62E-1C1D412DBF76</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>DAB51F8C-7295-4C62-B4C0-96A5D742D42E</string>
+				<string>E4F26360-7270-4078-A465-5BDC5B02384A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -25,20 +25,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>74732C40-DBC9-4573-867F-564278312229</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>74732C40-DBC9-4573-867F-564278312229</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>3A114F76-CE3C-4D4D-BF78-2782642DA9E9</string>
+				<string>11C94442-D6E2-4C2E-A62E-1C1D412DBF76</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -51,7 +38,7 @@
 	<key>createdby</key>
 	<string>31mskz10</string>
 	<key>description</key>
-	<string>Alfredから新規ファイルを作成する</string>
+	<string>開いているフォルダに新規ファイルを作成する / Create a new file in the open folder</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
@@ -61,42 +48,12 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-  tell application "System Events"
-    set appName to name of the first process whose frontmost is true
-  end tell
-  if appName is "Finder" then
-    tell application "Finder"
-      set pathList to POSIX path of (folder of the front window as alias)
-      return pathList
-    end tell
-  else
-    tell application "Path Finder"
-      set pathList to POSIX path of the target of the front finder window
-      return pathList
-    end tell
-  end if
-end alfred_script</string>
-				<key>cachescript</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
-			<key>uid</key>
-			<string>3A114F76-CE3C-4D4D-BF78-2782642DA9E9</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argumenttype</key>
 				<integer>0</integer>
 				<key>keyword</key>
 				<string>nf</string>
 				<key>subtext</key>
-				<string>新規ファイルを作成する</string>
+				<string>開いているフォルダに新規ファイルを作成 / Create a new file in the open folder</string>
 				<key>text</key>
 				<string>Add New File</string>
 				<key>withspace</key>
@@ -112,85 +69,104 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>adduuid</key>
+				<key>concurrently</key>
 				<false/>
-				<key>allowemptyfiles</key>
-				<true/>
-				<key>createintermediatefolders</key>
-				<false/>
-				<key>filename</key>
-				<string>{query}/{var:fileName}</string>
-				<key>filetext</key>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>on run argv
+	set fileName to item 1 of argv
+	if fileName is "" or fileName contains "/" or fileName contains ":" then return "ファイル名に / や : は使えません / File names cannot contain / or :"
+	tell application "System Events" to set frontApp to name of first process whose frontmost is true
+	if frontApp is "Path Finder" then
+		tell application "Path Finder" to set folderPath to POSIX path of target of front finder window
+	else
+		tell application "Finder"
+			if (count of Finder windows) &gt; 0 then
+				set folderPath to POSIX path of (target of front Finder window as alias)
+			else
+				set folderPath to POSIX path of (path to desktop folder)
+			end if
+		end tell
+	end if
+	if folderPath does not end with "/" then set folderPath to folderPath &amp; "/"
+	set filePath to folderPath &amp; fileName
+	try
+		do shell script "set -o noclobber; : &gt; " &amp; quoted form of filePath
+	on error
+		return "作成できませんでした（同名のファイルがある可能性があります） / Could not create the file (it may already exist): " &amp; fileName
+	end try
+	return "作成しました / Created: " &amp; filePath
+end run</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
 				<string></string>
-				<key>relativepathmode</key>
-				<integer>0</integer>
 				<key>type</key>
-				<integer>0</integer>
+				<integer>6</integer>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.output.writefile</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>DAB51F8C-7295-4C62-B4C0-96A5D742D42E</string>
+			<string>11C94442-D6E2-4C2E-A62E-1C1D412DBF76</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argument</key>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
 				<string>{query}</string>
-				<key>variables</key>
-				<dict>
-					<key>fileName</key>
-					<string>{query}</string>
-				</dict>
+				<key>title</key>
+				<string>Add New File</string>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.utility.argument</string>
+			<string>alfred.workflow.output.notification</string>
 			<key>uid</key>
-			<string>74732C40-DBC9-4573-867F-564278312229</string>
+			<string>E4F26360-7270-4078-A465-5BDC5B02384A</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>［nf］キーワードのあとにファイル名を入力すると、Finderで開いているディレクトリ内に新規ファイルを作成します。
-（Path Finderにも対応）</string>
+	<string>FinderまたはPath Finderで開いているフォルダに空のファイルを作成します。Finderのウインドウがなければデスクトップに作成します。同名のファイルは上書きしません。
+Creates an empty file in the folder open in Finder or Path Finder (the Desktop if no Finder window is open). Existing files are never overwritten.
+
+Usage: nf file-name.txt</string>
 	<key>uidata</key>
 	<dict>
-		<key>3A114F76-CE3C-4D4D-BF78-2782642DA9E9</key>
+		<key>11C94442-D6E2-4C2E-A62E-1C1D412DBF76</key>
 		<dict>
 			<key>xpos</key>
-			<integer>275</integer>
+			<integer>260</integer>
 			<key>ypos</key>
-			<integer>135</integer>
+			<integer>120</integer>
 		</dict>
 		<key>58C36390-2933-4779-93EF-7953B5F8CACE</key>
 		<dict>
 			<key>xpos</key>
 			<integer>60</integer>
 			<key>ypos</key>
-			<integer>135</integer>
+			<integer>120</integer>
 		</dict>
-		<key>74732C40-DBC9-4573-867F-564278312229</key>
+		<key>E4F26360-7270-4078-A465-5BDC5B02384A</key>
 		<dict>
 			<key>xpos</key>
-			<integer>210</integer>
+			<integer>460</integer>
 			<key>ypos</key>
-			<integer>165</integer>
-		</dict>
-		<key>DAB51F8C-7295-4C62-B4C0-96A5D742D42E</key>
-		<dict>
-			<key>xpos</key>
-			<integer>445</integer>
-			<key>ypos</key>
-			<integer>135</integer>
+			<integer>120</integer>
 		</dict>
 	</dict>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>
-	<string>1.0.0</string>
+	<string>2.0.0</string>
 	<key>webaddress</key>
 	<string>https://webrandum.net/</string>
 </dict>

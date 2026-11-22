@@ -1,29 +1,19 @@
 # Change Profile
 
-[ダウンロード](https://github.com/31mskz10/alfred-workflows/releases/download/Change_Profile/Change.Profile.alfredworkflow) · [一覧へ戻る](../README.md)
+[English](README.en.md) · [ダウンロード](https://github.com/31mskz10/alfred-workflows/releases/download/Change_Profile/Change.Profile.alfredworkflow) · [一覧へ戻る](../README.md)
 
-Karabiner-ElementsのプロファイルをAlfredから切り替えます。
+Karabiner-ElementsのプロファイルをAlfredから切り替えます。プロファイルの一覧はKarabiner-Elementsから自動で読み込むため、設定は不要です。
 
 ## 必要なもの
 
 - macOS、Alfred Powerpack
-- Karabiner-Elementsと切り替え先のプロファイル
-- AlfredのTerminal設定で指定したターミナルアプリ
-
-## 初期設定
-
-初期状態では `JIS` と `US` の2つのプロファイルを切り替えます。別の名前を使う場合は、Alfredのワークフローエディタで次の項目を変更してください。
-
-1. `ke` のList Filterで、表示名と説明を自分のプロファイルに合わせます。
-2. 各Terminal Commandの `--select-profile` に渡す名前を、Karabiner-Elementsのプロファイル名と完全に一致させます。
-3. List Filterの `Arg` を変更する場合は、接続先のConditionalの比較値も同じ値に変更します。
-4. 末尾のアプリ操作には `/Applications/iTerm.app` が登録されています。使用するターミナルアプリに合わせて変更するか、不要ならこのオブジェクトを外します。
-
-コマンドは `/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli` を使用します。この場所にCLIがあることを確認してください。
+- Karabiner-Elements
 
 ## 使い方
 
-1. Alfredで `ke` に続けてスペースを入力します。
-2. プロファイルを選び、Enterを押します。初期状態では `ke JIS` または `ke US` で絞り込めます。
+1. Alfredで `ke` に続けてスペースを入力すると、プロファイルの一覧が表示されます。現在のプロファイルには「現在のプロファイル」と表示されます。
+2. プロファイル名で絞り込み、Enterを押します。切り替えが完了すると通知が表示されます。
 
-一覧にないプロファイル名を入力するだけでは切り替えられません。追加する場合はList Filter、Conditional、Terminal Commandを対応させてください。
+コマンドは `/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli` を使用します。Karabiner-Elementsを標準の方法でインストールしていれば、この場所にあります。
+
+1.0.0からの変更点: プロファイル名を設定する必要がなくなりました。切り替え後にiTermの表示・非表示を切り替える処理と、Terminal Commandによる実行は削除しました。
