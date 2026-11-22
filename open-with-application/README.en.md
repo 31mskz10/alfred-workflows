@@ -1,6 +1,6 @@
 # Open with Application
 
-[日本語](README.md) · [Download](Open%20with%20Application.alfredworkflow?raw=true)
+[日本語](README.md) · [Download](https://github.com/31mskz10/alfred-workflows/releases/download/Open_with_Application/Open.with.Application.alfredworkflow)
 
 Open files and folders selected in Finder or Path Finder with an application. Requires macOS and Alfred 6 Powerpack.
 

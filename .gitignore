@@ -2,3 +2,4 @@
 ._*
 __MACOSX/
 **/src/prefs.plist
+*.alfredworkflow

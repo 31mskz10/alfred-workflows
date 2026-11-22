@@ -1,0 +1,41 @@
+name: Release workflows
+
+on:
+  push:
+    branches: [master]
+    paths: ['*/src/**', '.github/workflows/release.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and release bumped workflows
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for plist in */src/info.plist; do
+            dir=${plist%%/*}
+            read -r prefix version < <(python3 -c 'import plistlib,sys; p=plistlib.load(open(sys.argv[1],"rb")); print(p["name"].replace(" ","_"), p["version"])' "$plist")
+            tag="${prefix}_v${version}"
+            gh release view "$tag" >/dev/null 2>&1 && continue
+
+            title="${prefix//_/ } v${version}"
+            asset="$RUNNER_TEMP/${prefix//_/.}.alfredworkflow"
+            (cd "$dir/src" && zip -r -X -q "$asset" . -x '.DS_Store' 'prefs.plist')
+
+            gh release create "$tag" "$asset" --title "$title" --notes "" --target "$GITHUB_SHA"
+            if gh release view "$prefix" >/dev/null 2>&1; then
+              gh release upload "$prefix" "$asset" --clobber
+              gh release edit "$prefix" --title "$title"
+            else
+              gh release create "$prefix" "$asset" --title "$title" --notes "" --target "$GITHUB_SHA"
+            fi
+          done

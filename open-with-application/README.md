@@ -1,6 +1,6 @@
 # Open with Application
 
-[English](README.en.md) · [ダウンロード](Open%20with%20Application.alfredworkflow?raw=true) · [一覧へ戻る](../README.md)
+[English](README.en.md) · [ダウンロード](https://github.com/31mskz10/alfred-workflows/releases/download/Open_with_Application/Open.with.Application.alfredworkflow) · [一覧へ戻る](../README.md)
 
 Finderで選択中のファイル・フォルダを指定のアプリで開く。
 
