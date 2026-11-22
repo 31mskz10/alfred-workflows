@@ -72,13 +72,15 @@
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>アプリのグループを作成し、まとめて起動します。グループはAlfred UIの画面で作成・編集します。Alfred 6 Powerpackが必要です。
-Create groups of apps and launch each group at once. Groups are created and edited in an Alfred UI window. Requires Alfred 6 Powerpack.
+	<string>アプリのグループを作成し、まとめて起動します。グループはAlfred UIの画面で作成・編集します。Alfred 6 Powerpackが必要です。ウインドウ配置の記録・再現には、Alfredへのアクセシビリティの許可と、System Eventsのオートメーションの許可が必要です。
+Create groups of apps and launch each group at once. Groups are created and edited in an Alfred UI window. Requires Alfred 6 Powerpack. Saving and restoring window layouts requires Accessibility access for Alfred and Automation permission for System Events.
 
 Usage: ag [group name]
 
 Environment Variables:
-language: auto / ja / en (default: auto, macOS preferred language).</string>
+language: auto / ja / en (default: auto, macOS preferred language).
+keyword: keyword typed in Alfred (default: ag).
+restore_timeout: maximum seconds to wait for app windows when restoring layouts, for the whole group; integer 1-300 (default: 20).</string>
 	<key>uidata</key>
 	<dict>
 		<key>0D2A18C3-5092-4B0D-A8E2-E0DA4C4FF612</key>
@@ -148,6 +150,27 @@ language: auto / ja / en (default: auto, macOS preferred language).</string>
 			<string>textfield</string>
 			<key>variable</key>
 			<string>keyword</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>20</string>
+				<key>placeholder</key>
+				<string>20</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>配置を再現するとき、アプリのウインドウが開くのを待つ最大秒数（グループ全体）。1〜300の整数。 / Maximum seconds to wait for app windows to open when restoring positions, for the whole group: an integer from 1 to 300.</string>
+			<key>label</key>
+			<string>ウインドウの待ち時間（秒） / Window wait time (seconds)</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>restore_timeout</string>
 		</dict>
 	</array>
 	<key>variablesdontexport</key>

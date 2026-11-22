@@ -2,7 +2,7 @@
   "bundleid": "com.31mskz10.LaunchApplications.ui",
   "log": {
     "internal": true,
-    "level": "all"
+    "level": "error"
   },
   "variablesconfig": {
     "language": {
@@ -10,12 +10,17 @@
       "default": "auto",
       "scriptenv": true
     },
+    "restore_timeout": {
+      "src": "variable",
+      "default": "20",
+      "scriptenv": true
+    },
     "query": {
       "src": "args[0]",
       "default": ""
     },
     "groups": {
-      "default": "[]",
+      "default": "",
       "persist": true,
       "scriptenv": true
     },
@@ -195,7 +200,8 @@
                   "update": {
                     "ids": {
                       "status": {
-                        "text": ""
+                        "text": "",
+                        "tooltip": ""
                       }
                     }
                   }
@@ -322,7 +328,7 @@
                 {
                   "type": "button",
                   "id": "editButton",
-                  "text": "{var:l_edit}",
+                  "text": "",
                   "events": [
                     {
                       "triggers": "actioned",
@@ -340,7 +346,7 @@
                 {
                   "type": "button",
                   "id": "recordButton",
-                  "text": "{var:l_record}",
+                  "text": "",
                   "events": [
                     {
                       "triggers": "actioned",
@@ -376,7 +382,7 @@
             {
               "type": "button",
               "id": "launchButton",
-              "text": "{var:l_launch}",
+              "text": "",
               "events": [
                 {
                   "triggers": "actioned",
