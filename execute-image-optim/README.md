@@ -6,18 +6,18 @@ FinderまたはPath Finderで選択中のファイル・フォルダをImageOpti
 
 ## 必要なもの
 
-- macOS、Alfred Powerpack
+- macOS、Alfred 5以降、Alfred Powerpack
 - [ImageOptim](https://imageoptim.com/mac)
 - FinderまたはPath Finder
 
 ## 使い方
 
 1. FinderまたはPath Finderで画像を選択するか、画像のあるフォルダを開きます。
-2. Alfredで `io` を入力し、Enterを押します。
+2. FinderまたはPath Finderを最前面にしたまま、Alfredで `io` を入力し、Enterを押します。
 
 フォルダを渡した場合、ImageOptimはサブフォルダ内の画像も処理します。ImageOptimは元のファイルを上書きするため、元画像を残したい場合はコピーしてから実行してください。圧縮方法はImageOptim側の設定に従います。
 
-ImageOptimがインストールされていない場合は、通知で知らせます。初回実行時にアプリの操作許可を求められた場合は、AlfredからFinderまたはPath Finderへの操作を許可してください。
+ImageOptimがインストールされていない場合など、ImageOptimで開けなかった場合は、理由を通知で知らせます。初回実行時に操作許可を求められた場合は、AlfredからSystem Events（最前面のアプリの判定に使用）、Finder、Path Finderへの操作を許可してください。
 
 ## 設定
 

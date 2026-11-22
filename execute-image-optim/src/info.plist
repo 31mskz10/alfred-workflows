@@ -84,42 +84,62 @@ on t(ja, en)
 	return en
 end t
 
-on run argv
+on targetPaths()
+	set found to {}
+	set pathFinder to "Path Finder"
 	tell application "System Events" to set frontApp to name of first process whose frontmost is true
-	set targets to {}
-	if frontApp is "Path Finder" then
-		tell application "Path Finder"
+	if frontApp is pathFinder then
+		tell application pathFinder
 			try
-				repeat with anItem in (get selection)
-					set end of targets to POSIX path of anItem
-				end repeat
+				set sel to (get «property slcT»)
+			on error errMsg number errNum
+				if errNum is -1743 then error errMsg number errNum
+				set sel to {}
 			end try
-			if targets is {} then
+			if sel is missing value then set sel to {}
+			repeat with anItem in sel
+				set end of found to «property pthP» of anItem
+			end repeat
+			if found is {} then
 				try
-					set end of targets to POSIX path of target of front finder window
+					set end of found to «property pthP» of «property tarG» of «class fwiD» 1
 				end try
 			end if
 		end tell
 	else if frontApp is "Finder" then
 		tell application "Finder"
 			repeat with anItem in (get selection)
-				set end of targets to POSIX path of (anItem as alias)
+				set end of found to POSIX path of (anItem as alias)
 			end repeat
-			if targets is {} and (count of Finder windows) &gt; 0 then set end of targets to POSIX path of (target of front Finder window as alias)
+			if found is {} then
+				try
+					set end of found to POSIX path of (target of front Finder window as alias)
+				end try
+			end if
 		end tell
 	end if
-	if targets is {} then return my t("FinderまたはPath Finderで画像を選択するか、フォルダを開いてください", "Select images or open a folder in Finder or Path Finder")
+	return found
+end targetPaths
+
+on run argv
 	try
-		do shell script "open -Ra ImageOptim"
-	on error
-		return my t("ImageOptimが見つかりません", "ImageOptim not found")
+		set targets to my targetPaths()
+	on error errMsg number errNum
+		if errNum is -1743 then return my t("オートメーションの許可が必要です。システム設定 &gt; プライバシーとセキュリティ &gt; オートメーション で Alfred に Finder・Path Finder・System Events の制御を許可してください。", "Automation access is required. Allow Alfred to control Finder, Path Finder and System Events in System Settings &gt; Privacy &amp; Security &gt; Automation.")
+		return my t("選択項目を取得できませんでした: ", "Could not get the selection: ") &amp; errMsg
 	end try
+	if targets is {} then return my t("FinderまたはPath Finderで画像を選択するか、フォルダを開いてください", "Select images or open a folder in Finder or Path Finder")
 	set command to "open -a ImageOptim"
 	repeat with targetPath in targets
-		set command to command &amp; " " &amp; quoted form of targetPath
+		set command to command &amp; " " &amp; quoted form of (targetPath as text)
 	end repeat
-	do shell script command
-end run</string>
+	try
+		do shell script command
+	on error errMsg
+		return my t("ImageOptimで開けませんでした: ", "Could not open in ImageOptim: ") &amp; errMsg
+	end try
+end run
+</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -160,7 +180,7 @@ end run</string>
 	<string>FinderまたはPath Finderで選択中の項目をImageOptimに渡します。選択がなければ開いているフォルダを渡します。
 Sends the items selected in Finder or Path Finder to ImageOptim, or the open folder if nothing is selected.
 
-Usage: io</string>
+Usage: &lt;keyword&gt; (default keyword: io)</string>
 	<key>uidata</key>
 	<dict>
 		<key>00418A37-14BE-41DD-B112-2343D801C2E8</key>
