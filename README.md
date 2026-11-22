@@ -8,7 +8,7 @@ macOSでのファイル操作、アプリの起動、設定の切り替えを行
 
 | ワークフロー名 | 概要 |
 | --- | --- |
-| [Open with Application](open-with-application/README.md) | FinderやPath Finderで選択中のファイル・フォルダを、指定したアプリケーションで開く。 |
+| [Open with Application](open-with-application/README.md) | Finderで選択中のファイル・フォルダを指定のアプリで開く |
 | [OpenIn Temporary Switch](openin-temporary-switch/README.md) | OpenInのルールを一時的に切り替える。 |
 | [CleanShot X Actions](cleanshot-x/README.md) | CleanShot XのアクションURLを検索・実行する。 |
 | [Toggle Dark Mode](toggle-dark-mode/README.md) | Macのダークモードとライトモードを切り替える。 |

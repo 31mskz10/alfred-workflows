@@ -1,0 +1,454 @@
+{
+  "bundleid": "com.31mskz10.openWithApplication.ui",
+  "variablesconfig": {
+    "language": {
+      "src": "variable",
+      "default": "auto",
+      "scriptenv": true
+    },
+    "query": {
+      "src": "args[0]",
+      "default": ""
+    },
+    "app_recent": {
+      "default": "[]",
+      "persist": true,
+      "scriptenv": true
+    },
+    "history_limit": {
+      "src": "variable",
+      "default": "50",
+      "scriptenv": true
+    }
+  },
+  "window": {
+    "title": "Open with Application",
+    "size": {
+      "width": 760,
+      "height": 600
+    },
+    "padding": 16,
+    "root": {
+      "type": "view",
+      "layout": "border",
+      "spacing": 12,
+      "events": [
+        {
+          "triggers": "preload",
+          "action": {
+            "type": "script",
+            "src": "load-apps.js",
+            "async": true
+          }
+        }
+      ],
+      "shortcuts": [
+        {
+          "shortcut": "↑",
+          "action": {
+            "type": "function",
+            "src": "apps",
+            "args": "selectup"
+          }
+        },
+        {
+          "shortcut": "↓",
+          "action": {
+            "type": "function",
+            "src": "apps",
+            "args": "selectdown"
+          }
+        },
+        {
+          "shortcut": "⌥←",
+          "action": {
+            "type": "function",
+            "src": "apps",
+            "args": "selectprevious"
+          }
+        },
+        {
+          "shortcut": "⌥→",
+          "action": {
+            "type": "function",
+            "src": "apps",
+            "args": "selectnext"
+          }
+        },
+        {
+          "shortcut": "⌘↩",
+          "action": {
+            "type": "script",
+            "src": "select-app.js",
+            "args": [
+              "{value:apps.selected.appPath.text}",
+              "search"
+            ]
+          }
+        },
+        {
+          "shortcut": "⇧↩",
+          "action": {
+            "type": "script",
+            "src": "select-app.js",
+            "args": [
+              "{value:apps.selected.appPath.text}",
+              "again"
+            ]
+          }
+        },
+        {
+          "shortcut": "←",
+          "action": {
+            "type": "function",
+            "src": "apps",
+            "args": "selectprevious"
+          }
+        },
+        {
+          "shortcut": "→",
+          "action": {
+            "type": "function",
+            "src": "apps",
+            "args": "selectnext"
+          }
+        }
+      ],
+      "components": [
+        {
+          "type": "view",
+          "layout": "inline",
+          "direction": "vertical",
+          "spacing": 8,
+          "constraints": {
+            "region": "top"
+          },
+          "components": [
+            {
+              "type": "view",
+              "layout": "border",
+              "constraints": {
+                "position": "centre",
+                "size": {
+                  "width": 340
+                }
+              },
+              "padding": 8,
+              "spacing": 8,
+              "cornerradius": 8,
+              "background": {
+                "light": "#2533440D",
+                "dark": "#00000026"
+              },
+              "components": [
+                {
+                  "type": "textfield",
+                  "id": "search",
+                  "constraints": {
+                    "region": "centre"
+                  },
+                  "focus": true,
+                  "text": "{var:query}",
+                  "placeholder": "Search / 検索",
+                  "font": {
+                    "size": 16
+                  },
+                  "textinsets": {
+                    "horizontal": 4,
+                    "vertical": 4
+                  },
+                  "accessibility": {
+                    "label": "{var:l_search}"
+                  },
+                  "events": [
+                    {
+                      "triggers": "changed",
+                      "action": {
+                        "type": "function",
+                        "src": "apps",
+                        "args": "filterdata"
+                      }
+                    },
+                    {
+                      "triggers": "actioned",
+                      "action": {
+                        "type": "script",
+                        "src": "select-app.js",
+                        "args": [
+                          "{value:apps.selected.appPath.text}",
+                          "open"
+                        ]
+                      }
+                    }
+                  ],
+                  "bordered": false,
+                  "background": null,
+                  "focusring": false
+                },
+                {
+                  "type": "button",
+                  "constraints": {
+                    "region": "right"
+                  },
+                  "bordered": false,
+                  "image": {
+                    "type": "symbol",
+                    "src": "questionmark.circle",
+                    "size": {
+                      "width": 18
+                    }
+                  },
+                  "tooltip": "{var:l_help_tip}",
+                  "accessibility": {
+                    "label": "{var:l_help}"
+                  },
+                  "shortcut": "⌘?",
+                  "events": [
+                    {
+                      "triggers": "actioned",
+                      "action": {
+                        "type": "json",
+                        "src": {
+                          "sheet": {
+                            "root": {
+                              "type": "view",
+                              "layout": "form",
+                              "padding": 24,
+                              "spacing": 12,
+                              "components": [
+                                {
+                                  "type": "label",
+                                  "text": "↑ ↓ ← →",
+                                  "font": {
+                                    "size": 14,
+                                    "weight": "medium"
+                                  }
+                                },
+                                {
+                                  "type": "label",
+                                  "text": "{var:l_choose}",
+                                  "font": {
+                                    "size": 14
+                                  }
+                                },
+                                {
+                                  "type": "label",
+                                  "text": "Enter",
+                                  "font": {
+                                    "size": 14,
+                                    "weight": "medium"
+                                  }
+                                },
+                                {
+                                  "type": "label",
+                                  "text": "{var:l_open}",
+                                  "font": {
+                                    "size": 14
+                                  }
+                                },
+                                {
+                                  "type": "label",
+                                  "text": "Command＋Enter",
+                                  "font": {
+                                    "size": 14,
+                                    "weight": "medium"
+                                  }
+                                },
+                                {
+                                  "type": "label",
+                                  "text": "{var:l_find}",
+                                  "font": {
+                                    "size": 14
+                                  }
+                                },
+                                {
+                                  "type": "label",
+                                  "text": "Shift＋Enter",
+                                  "font": {
+                                    "size": 14,
+                                    "weight": "medium"
+                                  }
+                                },
+                                {
+                                  "type": "label",
+                                  "text": "{var:l_again}",
+                                  "font": {
+                                    "size": 14
+                                  }
+                                },
+                                {
+                                  "type": "label",
+                                  "text": "Command＋← / →",
+                                  "font": {
+                                    "size": 14,
+                                    "weight": "medium"
+                                  }
+                                },
+                                {
+                                  "type": "label",
+                                  "text": "{var:l_cursor}",
+                                  "font": {
+                                    "size": 14
+                                  }
+                                },
+                                {
+                                  "type": "label",
+                                  "text": "Esc",
+                                  "font": {
+                                    "size": 14,
+                                    "weight": "medium"
+                                  }
+                                },
+                                {
+                                  "type": "label",
+                                  "text": "{var:l_close}",
+                                  "font": {
+                                    "size": 14
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "id": "help"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "dataview",
+          "id": "apps",
+          "constraints": {
+            "region": "centre"
+          },
+          "cols": 6,
+          "spacing": 8,
+          "placeholder": "Loading… / 読み込み中…",
+          "data": {
+            "src": []
+          },
+          "accessibility": {
+            "label": "{var:l_apps}"
+          },
+          "events": [
+            {
+              "triggers": "doubleclicked",
+              "action": {
+                "type": "script",
+                "src": "select-app.js",
+                "args": [
+                  "{value:apps.selected.appPath.text}",
+                  "open"
+                ]
+              }
+            },
+            {
+              "triggers": "changed",
+              "action": {
+                "type": "json",
+                "src": {
+                  "update": {
+                    "ids": {
+                      "status": {
+                        "text": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "cell": {
+            "height": 112,
+            "init": {
+              "appCell.background": null,
+              "appName.colour": "labelColor"
+            },
+            "selected": {
+              "appCell.background": "alfredSelectedResultBackgroundColor",
+              "appName.colour": "alfredSelectedResultTextColor"
+            },
+            "root": {
+              "type": "view",
+              "id": "appCell",
+              "layout": "stack",
+              "padding": 6,
+              "cornerradius": 12,
+              "components": [
+                {
+                  "type": "label",
+                  "id": "appPath",
+                  "hidden": true
+                },
+                {
+                  "type": "view",
+                  "layout": "border",
+                  "spacing": 4,
+                  "components": [
+                    {
+                      "type": "imageview",
+                      "id": "appIcon",
+                      "constraints": {
+                        "region": "centre",
+                        "position": "centre",
+                        "size": 64
+                      }
+                    },
+                    {
+                      "type": "label",
+                      "id": "appName",
+                      "constraints": {
+                        "region": "bottom",
+                        "size": {
+                          "height": 30
+                        }
+                      },
+                      "font": {
+                        "size": 12
+                      },
+                      "textalign": "centre",
+                      "linebreak": "wordwrap"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "padding": 4
+        },
+        {
+          "type": "label",
+          "id": "status",
+          "text": "",
+          "font": {
+            "size": 14
+          },
+          "colour": "secondaryLabelColor",
+          "constraints": {
+            "region": "bottom"
+          },
+          "linebreak": "truncatemiddle",
+          "textalign": "centre"
+        }
+      ]
+    },
+    "blur": true
+  },
+  "variables": {
+    "l_search": "Search apps",
+    "l_help": "Keyboard shortcuts",
+    "l_help_tip": "Keyboard shortcuts (Command+?)",
+    "l_choose": "Select an app",
+    "l_open": "Open with the selected app",
+    "l_find": "Search for a file or folder to open",
+    "l_again": "Open, then select another app",
+    "l_cursor": "Move to the start or end of the query",
+    "l_close": "Close this window",
+    "l_apps": "Applications",
+    "l_empty": "No matching applications"
+  }
+}
