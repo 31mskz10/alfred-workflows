@@ -31,7 +31,7 @@ The create and edit sheet lists the apps in `/Applications`, `/System/Applicatio
 1. Launch the group's apps and arrange their windows. Windows can span several displays.
 2. Open the window with `ag`, select the group and press Command + L.
 
-Windows of running apps are saved, except minimized ones. Saved windows of apps that are not running are kept. Groups with saved positions show "Window positions saved".
+Windows of running apps are saved, except minimized ones. Saved windows of apps that are not running are kept.
 
 Positions and sizes are stored relative to the display each window is on, so windows return to the same place on the same display even if the display arrangement or resolution changes. When the saved display is not connected, windows are fitted onto the nearest display. Multiple windows of one app are matched by title, then by stacking order.
 

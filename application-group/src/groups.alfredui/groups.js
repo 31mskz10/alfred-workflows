@@ -27,7 +27,6 @@ const TEXT = {
     noApps: ['アプリを1つ以上選択してください。', 'Select at least one app.'],
     missing: ['見つからないアプリ: %s', 'Not found: %s'],
     untitled: ['新しいグループ', 'New Group'],
-    hasLayout: ['ウインドウ位置を記録済み', 'Window positions saved'],
     recorded: ['%s個のウインドウの配置を記録しました。', 'Saved the layout of %s windows.'],
     noWindows: ['記録できるウインドウがありません。アプリを起動して並べてから記録してください。', 'No windows to save. Launch and arrange the apps first.'],
     permission: ['アクセシビリティの許可が必要です。システム設定 > プライバシーとセキュリティ > アクセシビリティ で Alfred を許可してください。',
@@ -110,8 +109,7 @@ function rows(groups) {
         uid: group.id,
         'groupId.text': group.id,
         'groupName.text': group.name,
-        'groupApps.text': group.apps.map(appName).join(', ') +
-            (group.layout && Object.keys(group.layout).length ? ' — ' + t('hasLayout') : ''),
+        'groupApps.text': group.apps.map(appName).join(', '),
         'groupIcon.image': group.apps.length
             ? {type: 'fileicon', src: group.apps[0]}
             : {type: 'symbol', src: 'square.stack'}
